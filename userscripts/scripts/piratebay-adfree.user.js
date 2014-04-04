@@ -6,15 +6,16 @@
 // @updateURL   https://nodar-chkuaselidze.github.io/userscripts/scripts/piratebay-adfree.meta.js
 // @include     http://thepiratebay.se/*
 // @include     https://thepiratebay.se/*
-// @version     1.0.1
+// @version     1.1.0
 // @grant       none
 // ==/UserScript==
 
-window.addEventListener('load', function () {
-    var ads = document.getElementsByTagName('iframe');
-    
-    while(ads.length) {
-      var ad = ads[0];
-      ad.parentNode.removeChild(ad);
-    }
-});
+function removeAds() {
+  var ads = document.getElementsByTagName('iframe');
+
+  while(ads.length)
+    ads[0].parentNode.removeChild(ads[0]);
+}
+
+removeAds();
+window.addEventListener('load', removeAds);
