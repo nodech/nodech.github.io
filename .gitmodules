@@ -1,0 +1,3 @@
+[submodule "qartulskripti-web"]
+  path = qartulskripti
+  url = git@github.com:nodar-chkuaselidze/qartulskripti-web.git
