@@ -1,0 +1,36 @@
+#container {
+
+}
+
+.bars rect {
+  background-color: #ccc;
+}
+
+svg {
+  border: 1px solid black;
+}
+
+g {
+  outline: 1px solid red;
+}
+
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.x.axis line {
+  stroke: #fff;
+}
+
+.x.axis .minor {
+  stroke-opacity: .5;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.y.axis line, .y.axis path {
+  fill: none;
+  stroke: #000;
+}
