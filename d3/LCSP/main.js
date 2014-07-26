@@ -1,11 +1,27 @@
-d3.json('./data.json', function (data) {
+//d3.json('./data.json', function (data) {
+//  data.arrayOne.max = data.arrayTwo.max = 100;
+//  data.arrayOne.min = data.arrayTwo.min = 1;
+
+//  new LCSP(data.arrayOne, '#container');
+//  new LCSP(data.arrayTwo, '#container');
+//});
+
+window.onload = function () {
+  data = {};
+  data.arrayOne = [
+    51, 15, 15, 81, 25, 14, 12, 21, 61, 39, 19, 29, 68, 77, 21, 75, 30, 36, 6, 19, 59, 31, 61, 39, 51, 35, 91, 90, 48, 99
+  ];
+
+  data.arrayTwo = [
+    59, 35, 1, 53, 14, 15, 64, 51, 53, 36 , 6, 19, 59, 91, 75, 81, 21, 43, 30, 59, 35
+  ];
+
   data.arrayOne.max = data.arrayTwo.max = 100;
   data.arrayOne.min = data.arrayTwo.min = 1;
 
-data.arrayOne.push(100);
   new LCSP(data.arrayOne, '#container');
   new LCSP(data.arrayTwo, '#container');
-});
+};
 
 function LCSP(data, container) {
   this.data      = data;
@@ -34,6 +50,7 @@ function barVisualisation (container, options) {
   var defaultOptions = {
     width  : 10,
     height : this.height,
+    duration: 750,
     margin : {
       left   : 30,
       top    : 20,
@@ -68,13 +85,14 @@ barVisualisation.prototype.draw = function (data) {
       .style('font-size', '10px');
 
   var self = this;
-  this.container
+  var bars = this.container
     .append('g')
     .attr('class', 'bars')
-    .attr('transform', 'translate(' + self.options.margin.left + ', ' + self.options.margin.top + ')')
-    .selectAll('div')
-    .data(data)
-    .enter()
+    .attr('transform', 'translate(' + self.options.margin.left + ', ' + self.options.margin.top + ')');
+
+  var barEnter = bars.selectAll('g.bar').data(data).enter().append('g').attr('class', 'bar');
+
+  barEnter
     .append('rect')
     .attr('width', self.options.width)
     .attr('height', function (d) {
@@ -84,8 +102,34 @@ barVisualisation.prototype.draw = function (data) {
       return 2 + index * (self.options.width + self.options.barMargin.left);
     })
     .attr('y', function (d) {
+      return 1;
       return self.options.height - d3.select(this).attr('height') - self.options.margin.top - self.options.margin.bottom;
     })
+    .transition()
+    .duration(self.options.duration)
+    .attr('height', function (d) {
+      return d / data.max * (self.height - self.options.margin.top - self.options.margin.bottom);
+    })
+    .attr('y', function (d, index, what) {
+      return self.options.height - d3.select(this).attr('height') - self.options.margin.top - self.options.margin.bottom;
+    });
+
+  barEnter
+    .append('text')
+    .style('font-size', '11px')
+    .attr('x', function (d, index) {
+      return index * (self.options.width + self.options.barMargin.left);
+    })
+    .attr('y', +self.options.height - self.options.margin.top - self.options.margin.bottom)
+    .attr('transform', function (d) {
+      var textElem = d3.select(this);
+      return 'rotate(-45 ' + textElem.attr('x') + ' ' + textElem.attr('y') + ')';
+    })
+    .attr('dy', '10px')
+    .attr('dx', '-8px')
+    .text(function (d) {
+      return d;
+    });
 };
 
 
