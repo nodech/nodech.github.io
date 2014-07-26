@@ -1,0 +1,24 @@
+{
+  "id" : 1,
+  "name" : "ROOT",
+  "children" : [
+    {
+      "id" : 2,
+      "name" : "CHILD1",
+      "children" : [
+        { "id" : 4, "name" : "SOME2", "children" : [ { "id" : 8, "name" : "EH1" } ] },
+        { "id" : 5, "name" : "SOME3" },
+        { "id" : 9, "name" : "SOME7" },
+        { "id" : 10, "name" : "SOME8" }
+      ]
+    },
+    {
+      "id" : 3,
+      "name" : "CHILD2",
+      "children" : [
+        { "id" : 6, "name" : "SOME4" },
+        { "id" : 7, "name" : "SOME5" }
+      ]
+    }
+  ]
+}
