@@ -104,11 +104,14 @@ barVisualisation.prototype.draw = function (data) {
       return 2 + index * (self.options.width + self.options.barMargin.left);
     })
     .attr('y', function (d) {
-      return self.options.height - barHeight(d) - self.options.margin.top - self.options.margin.bottom;
+      return self.options.height - self.options.margin.top - self.options.margin.bottom;
     })
     .transition()
     .duration(self.options.duration)
-    .attr('height', barHeight);
+    .attr('height', barHeight)
+    .attr('y', function (d) {
+      return self.options.height - barHeight(d) - self.options.margin.top - self.options.margin.bottom;
+    });
 
   barEnter
     .append('text')
