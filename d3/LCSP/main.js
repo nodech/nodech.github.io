@@ -92,27 +92,23 @@ barVisualisation.prototype.draw = function (data) {
 
   var barEnter = bars.selectAll('g.bar').data(data).enter().append('g').attr('class', 'bar');
 
+  var barHeight = function (d) {
+    return d / data.max * (self.height - self.options.margin.top - self.options.margin.bottom);
+  };
+
   barEnter
     .append('rect')
     .attr('width', self.options.width)
-    .attr('height', function (d) {
-      return d / data.max * (self.height - self.options.margin.top - self.options.margin.bottom);
-    })
+    .attr('height', 1)
     .attr('x', function (d, index) {
       return 2 + index * (self.options.width + self.options.barMargin.left);
     })
     .attr('y', function (d) {
-      return 1;
-      return self.options.height - d3.select(this).attr('height') - self.options.margin.top - self.options.margin.bottom;
+      return self.options.height - barHeight(d) - self.options.margin.top - self.options.margin.bottom;
     })
     .transition()
     .duration(self.options.duration)
-    .attr('height', function (d) {
-      return d / data.max * (self.height - self.options.margin.top - self.options.margin.bottom);
-    })
-    .attr('y', function (d, index, what) {
-      return self.options.height - d3.select(this).attr('height') - self.options.margin.top - self.options.margin.bottom;
-    });
+    .attr('height', barHeight);
 
   barEnter
     .append('text')
