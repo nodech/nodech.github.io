@@ -48,7 +48,7 @@ function barVisualisation (container, options) {
   this.height    = container.attr('height');
 
   var defaultOptions = {
-    width  : 10,
+    width  : 20,
     height : this.height,
     duration: 750,
     margin : {
