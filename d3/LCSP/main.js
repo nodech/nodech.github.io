@@ -64,6 +64,11 @@ function barVisualisation (container, options) {
   if (!options || typeof options !== 'object') options = {};
 
   this.options   = extend(defaultOptions, options);
+
+  this.fillColorScale = d3.scale
+    .linear()
+    .domain([1, 33, 66, 100])
+    .range(['red', 'orange', 'green']);
 }
 
 barVisualisation.prototype.draw = function (data) {
@@ -103,13 +108,20 @@ barVisualisation.prototype.draw = function (data) {
       return 2 + index * (self.options.width + self.options.barMargin.left);
     })
     .attr('y', function (d) {
-      return self.options.height - self.options.margin.top - self.options.margin.bottom;
+      return height;
     })
+    .attr('fill', 'black')
     .transition()
+    .delay(function (d, i) {
+      return i * 30;
+    })
     .duration(self.options.duration)
     .attr('height', barHeight)
     .attr('y', function (d) {
       return height - barHeight(d);
+    })
+    .attr('fill', function (d) {
+      return self.fillColorScale(d);
     });
 
   barEnter
