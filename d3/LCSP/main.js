@@ -69,11 +69,10 @@ function barVisualisation (container, options) {
 barVisualisation.prototype.draw = function (data) {
   var height = this.options.height - this.options.margin.top - this.options.margin.bottom;
 
-  console.log(height);
-  this.y = d3.scale.linear().range([0, height]).domain([100, 0]);
+  this.yScale = d3.scale.linear().range([0, height]).domain([100, 0]);
 
   this.axisY = d3.svg.axis()
-    .scale(this.y)
+    .scale(this.yScale)
     .orient('left')
     .tickFormat(d3.format('d'));
 
@@ -93,7 +92,7 @@ barVisualisation.prototype.draw = function (data) {
   var barEnter = bars.selectAll('g.bar').data(data).enter().append('g').attr('class', 'bar');
 
   var barHeight = function (d) {
-    return d / data.max * (self.height - self.options.margin.top - self.options.margin.bottom);
+    return height - self.yScale(d);
   };
 
   barEnter
@@ -110,7 +109,7 @@ barVisualisation.prototype.draw = function (data) {
     .duration(self.options.duration)
     .attr('height', barHeight)
     .attr('y', function (d) {
-      return self.options.height - barHeight(d) - self.options.margin.top - self.options.margin.bottom;
+      return height - barHeight(d);
     });
 
   barEnter
@@ -119,7 +118,7 @@ barVisualisation.prototype.draw = function (data) {
     .attr('x', function (d, index) {
       return index * (self.options.width + self.options.barMargin.left);
     })
-    .attr('y', +self.options.height - self.options.margin.top - self.options.margin.bottom)
+    .attr('y', height)
     .attr('transform', function (d) {
       var textElem = d3.select(this);
       return 'rotate(-45 ' + textElem.attr('x') + ' ' + textElem.attr('y') + ')';
