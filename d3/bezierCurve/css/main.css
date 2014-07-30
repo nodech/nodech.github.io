@@ -1,0 +1,18 @@
+circle {
+  cursor: pointer;
+}
+
+circle:hover {
+  fill : yellow;
+}
+
+path {
+  stroke : black;
+  stroke-width: 2;
+  fill : none;
+}
+
+line {
+  stroke : black;
+  stroke-width: 1;
+}
