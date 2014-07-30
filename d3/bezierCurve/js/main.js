@@ -7,11 +7,10 @@ var svg = bodyDom.append('svg')
               .attr('height', svgHeight);
 
 var Points = [
-  { control1 : [ 20, 20 ],   control2 : [ 20, 20 ], dest : [ 20, 20 ] },
-  { control1 : [ 50, 50 ],   control2 : [ 80, 100 ], dest : [ 100, 100 ] },
-  { control1 : [ 120, 130 ], control2 : [ 180, 240 ], dest : [ 300, 400 ] }
+  { control1 : [ 262, 249 ], control2 : [ 262, 249 ], dest : [ 262, 249 ] },
+  { control1 : [ 295, 126 ], control2 : [ 164, 177 ], dest : [ 104, 322 ] },
+  { control1 : [ 62,  451 ], control2 : [ 224, 483 ], dest : [ 261, 330 ] }
 ];
-
 
 var drag = d3.behavior.drag()
   .origin(function (d) {
