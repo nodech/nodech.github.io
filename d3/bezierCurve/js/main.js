@@ -12,20 +12,57 @@ var Points = [
   { control1 : [ 62,  451 ], control2 : [ 224, 483 ], dest : [ 261, 330 ] }
 ];
 
+var removePoints = {
+  startX : 250,
+  startY : 5,
+  width  : 50,
+  height : 25
+};
+
 var drag = d3.behavior.drag()
   .origin(function (d) {
     var circle = d3.select(this);
 
     return { x : circle.attr('cx'), y : circle.attr('cy'), data : d };
   })
-  .on('drag', function (d, i) {
+  .on('dragstart', function (d) {
     var circle = d3.select(this),
-      name = circle.attr('name');
+        name   = circle.attr('name');
+
+    if (name === 'dest') {
+      removePoint.classed('hide', false);
+    }
+  })
+  .on('drag', function (d) {
+    var circle = d3.select(this),
+      name = circle.attr('name'),
+      i    = d.key;
 
     Points[i][name][0] = d3.event.x;
     Points[i][name][1] = d3.event.y;
 
     positionPoints();
+  })
+  .on('dragend', function (d) {
+    var circle = d3.select(this),
+        name   = circle.attr('name'), x, y;
+
+    if (name === 'dest') {
+      x = circle.attr('cx');
+      y = circle.attr('cy');
+
+      if (x > removePoints.startX && x < removePoints.startX + removePoints.width &&
+          y > removePoints.startY && y < removePoints.startY + removePoints.height &&
+          Points.length > 1)
+      {
+        Points.splice(Points.indexOf(d), 1);
+        Points[0].control1 = Points[0].control2 = Points[0].dest;
+
+        updatePoints();
+        positionPoints();
+      }
+      removePoint.classed('hide', true);
+    }
   });
 
 //Starting point
@@ -33,13 +70,16 @@ Points[0].control1 = Points[0].control2 = Points[0].dest;
 
 var GROUPS = [];
 function updatePoints() {
-  var pointGroup = svg.selectAll('g')
+  var initData = svg.selectAll('g.point')
         .data(Points, function (d) {
           d.key = Points.indexOf(d);
           return Points.indexOf(d);
-        })
-        .enter()
-        .append('g');
+        }),
+  pointGroup = initData.enter()
+        .append('g')
+        .classed('point', true);
+
+  initData.exit().remove('g');
 
   pointGroup.append('line');
   pointGroup.append('line');
@@ -65,6 +105,7 @@ function updatePoints() {
     styles = extend(defaultStyles, styles);
 
     ctrlPoint
+      .attr('class', 'ctrlPoint')
       .attr('name', pointName)
       .attr('fill', styles.fill)
       .attr('stroke', styles.stroke)
@@ -81,7 +122,7 @@ function positionPoints() {
   groups.forEach(function (group) {
     var line1   = group.select('line:nth-child(1)'),
         line2   = group.select('line:nth-child(2)')
-        circles = group.selectAll('circle'),
+        circles = group.selectAll('circle.ctrlPoint'),
         path    = group.select('path');
 
     line1
@@ -128,6 +169,62 @@ updatePoints();
 positionPoints();
 
 
+var newPoint = svg.append('g')
+  .classed('newPoint', true)
+  .on('click', function () {
+    var lastPoint = Points[Points.length - 1];
+
+    Points.push({
+      control1 : [ lastPoint.dest[0] + 40, lastPoint.dest[1] + 20 ],
+      control2 : [ lastPoint.dest[0] + 20, lastPoint.dest[1] + 40 ],
+      dest     : [ lastPoint.dest[0] + 40, lastPoint.dest[1] + 40 ]
+    });
+
+    updatePoints();
+    positionPoints();
+  });
+
+newPoint.append('circle')
+  .attr('cx', 20)
+  .attr('cy', 20)
+  .attr('r', 5);
+
+newPoint.append('text')
+  .attr('x', 30)
+  .attr('y', 25)
+  .text('New Point');
+
+
+var hideControllers = svg.append('g')
+  .classed('hidePoints', true)
+  .on('click', function () {
+    var ctrl = d3.select(this);
+
+    hide = !this.hidden;
+
+    if (hide) {
+      ctrl.select('text').text('+ Show Controllers');
+    } else {
+      ctrl.select('text').text('- Hide Controllers');
+    }
+
+    svg.selectAll('g.point circle.ctrlPoint').classed('hide', hide);
+    svg.selectAll('g.point line').classed('hide', hide);
+
+    this.hidden = hide;
+  })
+  .append('text')
+  .attr('x', 120)
+  .attr('y', 25)
+  .text('-Hide Controllers');
+
+removePoint = svg.append('rect')
+  .classed('removeSpace', true)
+  .classed('hide', true)
+  .attr('x', 250)
+  .attr('y', 5)
+  .attr('width', 50)
+  .attr('height', 25);
 
 function extend(base, data) {
   for (var key in data) {

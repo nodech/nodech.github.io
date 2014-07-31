@@ -1,9 +1,18 @@
-circle {
+g.newPoint, g.hidePoints {
   cursor: pointer;
 }
 
+circle {
+  cursor: pointer;
+  fill : orange;
+}
+
 circle:hover {
-  fill : yellow;
+  fill : blue;
+}
+
+rect.removeSpace {
+  fill: red;
 }
 
 path {
@@ -15,4 +24,8 @@ path {
 line {
   stroke : black;
   stroke-width: 1;
+}
+
+.hide {
+  display: none;
 }
