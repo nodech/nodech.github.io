@@ -37,25 +37,25 @@ Cells.prototype.eat = function () {
 };
 
 Cells.prototype.eatRules = function (current, eaters) {
-  var self = this;
-
+  var _eaters = [];
   current = this.data[current];
-  eaters = eaters.filter(function (eater) {
+
+  for(var i = 0; i < eaters.length; i++) {
+    var eater = eaters[i];
+
     if (eater === null) {
-      return false;
-    }
-    return true;
-  })
-  .map(function (eater) {
-    return self.data[eater];
-  })
-  .filter(function (eater) {
-    if (CELL_TYPES[eater].eats.indexOf(CELL_TYPES[current].name) > -1) {
-      return true;
+      continue;
     }
 
-    return false;
-  });
+    eater = this.data[eater];
+
+    if (CELL_TYPES[eater].eats.indexOf(CELL_TYPES[current].name) < 0) {
+      continue;
+    }
+    _eaters.push(eater);
+  }
+
+  eaters = _eaters;
 
   if (eaters.length === 0) {
     return current;
