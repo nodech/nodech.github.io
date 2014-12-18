@@ -141,8 +141,8 @@ Cells.prototype.IdxToCoord = function (idx) {
 /* ALL LOGIC GOES BELOW */
 var canvas = document.createElement('canvas'),
   ctx = canvas.getContext('2d'),
-  WIDTH = 300,
-  HEIGHT = 300,
+  WIDTH = 200,
+  HEIGHT = 200,
   requestAnimationFrame = window.requestAnimationFrame;
 
 canvas.setAttribute('width', WIDTH);
