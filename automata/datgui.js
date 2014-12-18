@@ -7,7 +7,7 @@ CELL_TYPES.forEach(function (CELL_TYPE) {
   folder.addColor(CELL_TYPE, 'color');
 
   CELL_TYPE.eats.forEach(function (cell, i) {
-    var name = cell + ' kill %',
+    var name = cell + ' EAT %',
       ctrl;
 
     cellEats[name] = CELL_TYPE.prob[i] * 100;
