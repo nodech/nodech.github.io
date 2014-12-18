@@ -6,37 +6,38 @@
     <style>
       body { background: black; }
       canvas { height: 500px; margin: auto; display: block; }
+      div { margin: auto; text-align: center; }
     </style>
   </head>
   <body>
+    <div>
+      <button onclick="start()">Start Animation</button>
+      <button onclick="pause()">Pause Animation</button>
+    </div>
     <script>
     var CELL_TYPES = [{
-        name  : 'RED',
+        name  : 'FIRST',
         color : '#f00',
-        //eats  : ['GREEN', 'BLACK'],
+        //eats  : ['SECOND', 'BLACK'],
         //prob  : [0.1, 1]
-        eats  : ['GREEN', 'BLUE', 'YELLOW'],
+        eats  : ['SECOND', 'THIRD', 'FOURTH'],
         prob  : [0.1, 0.1, 0.1]
       }, {
-        name  : 'GREEN',
+        name  : 'SECOND',
         color : '#0f0',
-        //eats  : ['BLUE', 'BLACK'],
+        //eats  : ['THIRD', 'BLACK'],
         //prob  : [0.1, 0.8]
-        eats  : ['RED', 'BLUE', 'YELLOW'],
+        eats  : ['FIRST', 'THIRD', 'FOURTH'],
         prob  : [0.1, 0.1, 0.1]
       }, {
-        name  : 'BLUE',
+        name  : 'THIRD',
         color : '#00f',
-        //eats  : ['YELLOW', 'BLACK'],
-        //prob  : [0.1, 0.7]
-        eats  : ['RED', 'GREEN', 'YELLOW'],
+        eats  : ['FIRST', 'SECOND', 'FOURTH'],
         prob  : [0.1, 0.1, 0.1]
       }, {
-        name  : 'YELLOW',
+        name  : 'FOURTH',
         color : '#ff0',
-        //eats  : ['RED', 'BLACK'],
-        //prob  : [0.1, 0.5]
-        eats  : ['RED', 'GREEN', 'BLUE'],
+        eats  : ['FIRST', 'SECOND', 'THIRD'],
         prob  : [0.1, 0.1, 0.1]
       }
     ];

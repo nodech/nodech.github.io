@@ -5,7 +5,8 @@ var canvas = document.createElement('canvas'),
   requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame,
   cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame,
   cells = new Cells(WIDTH, HEIGHT),
-  stats = new Stats();
+  stats = new Stats(),
+  request;
 
 canvas.setAttribute('width', WIDTH);
 canvas.setAttribute('height', HEIGHT);
@@ -36,7 +37,16 @@ function eatDraw() {
   });
 
   stats.end();
-  requestAnimationFrame(eatDraw);
+  request = requestAnimationFrame(eatDraw);
 }
 
-requestAnimationFrame(eatDraw);
+function pause() {
+  cancelAnimationFrame(request);
+  request = null;
+}
+
+function start() {
+  if (!request) {
+    request = requestAnimationFrame(eatDraw);
+  }
+}
