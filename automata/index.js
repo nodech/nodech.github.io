@@ -143,7 +143,7 @@ var canvas = document.createElement('canvas'),
   ctx = canvas.getContext('2d'),
   WIDTH = 200,
   HEIGHT = 200,
-  requestAnimationFrame = window.requestAnimationFrame;
+  requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 canvas.setAttribute('width', WIDTH);
 canvas.setAttribute('height', HEIGHT);
