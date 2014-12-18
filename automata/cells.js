@@ -2,9 +2,12 @@
  * Cells Class
  */
 function Cells(width, height) {
-  this.width  = width;
-  this.height = height;
-  this.data   = [];
+  this.width   = width;
+  this.height  = height;
+  this.buffer  = new ArrayBuffer(width * height);
+  this._buffer = this.buffer.slice();
+  this.data    = new Uint8Array(this.buffer);
+  this._data   = new Uint8Array(this.buffer);
 }
 
 Cells.prototype.initEmptyData = function () {
@@ -16,8 +19,8 @@ Cells.prototype.initEmptyData = function () {
 };
 
 Cells.prototype.eat = function () {
-  var newData = new Array(this.data.length),
-    self = this;
+  var self = this,
+    tmp;
 
   this.iterate(function (x, y, idx) {
     var top    = self.coordToIdx(x, y - 1),
@@ -25,10 +28,12 @@ Cells.prototype.eat = function () {
         left   = self.coordToIdx(x - 1, y),
         right  = self.coordToIdx(x + 1, y);
 
-    newData[idx] = self.eatRules(idx, [top, bottom, left, right]);
+    self._data[idx] = self.eatRules(idx, [top, bottom, left, right]);
   });
 
-  this.data = newData;
+  tmp = this.data;
+  this.data = this._data;
+  this._data = tmp;
 };
 
 Cells.prototype.eatRules = function (current, eaters) {
