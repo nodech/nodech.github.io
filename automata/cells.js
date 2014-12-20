@@ -7,7 +7,7 @@ function Cells(width, height) {
   this.buffer  = new ArrayBuffer(width * height);
   this._buffer = this.buffer.slice();
   this.data    = new Uint8Array(this.buffer);
-  this._data   = new Uint8Array(this.buffer);
+  this._data   = new Uint8Array(this._buffer);
 }
 
 Cells.prototype.initEmptyData = function () {
