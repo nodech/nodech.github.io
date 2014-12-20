@@ -102,7 +102,7 @@ Cells.prototype.coordToIdx = function (x, y) {
     return null;
   }
 
-  return y * this.height + x;
+  return y * this.width + x;
 };
 
 Cells.prototype.IdxToCoord = function (idx) {
