@@ -10,6 +10,8 @@ canvas {
 
 #container {
   margin-bottom: 10px;
+  width: 500px;
+  margin: auto;
 }
 
 .controls {
@@ -17,9 +19,55 @@ canvas {
   text-align: center;
 }
 
-#status {
+#status, #drawing {
   width: 500px;
   margin: auto;
   color: white;
   margin-top: 5px;
+}
+
+#drawing input {
+  color: white;
+  background: #111;
+}
+
+#drawing select, #drawing button {
+  float: left;
+}
+
+#drawing:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.drawer {
+  border: 1px solid white;
+  background: black;
+  float: left;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.size5 {
+  width: 5px;
+  height: 5px;
+}
+
+.size50 {
+  width: 50px;
+  height: 50px;
+}
+
+.size100 {
+  width: 100px;
+  height: 100px;
+}
+
+.guide {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: white;
+  display: none;
 }
