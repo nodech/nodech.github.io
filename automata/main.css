@@ -1,0 +1,25 @@
+body {
+  background: black;
+}
+
+canvas {
+  margin: auto;
+  display: block;
+  height: 500px;
+}
+
+#container {
+  margin-bottom: 10px;
+}
+
+.controls {
+  margin: auto;
+  text-align: center;
+}
+
+#status {
+  width: 500px;
+  margin: auto;
+  color: white;
+  margin-top: 5px;
+}
