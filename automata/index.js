@@ -53,12 +53,12 @@ function draw() {
     ctx.fillRect(x, y, 1, 1);
   });
   statusUpdate();
+  initCellCounts();
 }
 
 function eat() {
   cells.eat();
   draw();
-  initCellCounts();
 }
 
 function eatDraw() {
