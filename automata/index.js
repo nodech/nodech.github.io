@@ -6,7 +6,9 @@ var canvas = document.createElement('canvas'),
   cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame,
   cells = new Cells(WIDTH, HEIGHT),
   stats = new Stats(),
-  request;
+  request,
+  status = document.getElementById('status'),
+  CELLS_COUNT = {};
 
 canvas.setAttribute('width', WIDTH);
 canvas.setAttribute('height', HEIGHT);
@@ -17,8 +19,15 @@ stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
 
-document.body.appendChild(canvas);
+document.getElementById('container').appendChild(canvas);
 document.body.appendChild(stats.domElement);
+
+function initCellCounts() {
+  for (var i = 0; i < CELL_TYPES.length; i++) {
+    CELLS_COUNT[CELL_TYPES[i].name] = 0;
+  }
+};
+initCellCounts();
 
 var cells = new Cells(WIDTH, HEIGHT);
 cells.initEmptyData();
@@ -28,14 +37,22 @@ cells.iterate(function (x, y, idx) {
   ctx.fillRect(x, y, 1, 1);
 });
 
-function eatDraw() {
-  stats.begin();
+function eat() {
   cells.eat();
   cells.iterate(function (x, y, idx) {
-    ctx.fillStyle = CELL_TYPES[cells.data[idx]].color;
+    var CELL = CELL_TYPES[cells.data[idx]];
+
+    CELLS_COUNT[CELL.name]++;
+    ctx.fillStyle = CELL.color;
     ctx.fillRect(x, y, 1, 1);
   });
+  statusUpdate();
+  initCellCounts();
+}
 
+function eatDraw() {
+  stats.begin();
+  eat();
   stats.end();
   request = requestAnimationFrame(eatDraw);
 }
@@ -51,6 +68,12 @@ function start() {
   }
 }
 
+function nextFrame() {
+  if (request === null) {
+    eat();
+  }
+}
+
 function full() {
   elem = canvas;
 
@@ -63,4 +86,18 @@ function full() {
   } else if (elem.webkitRequestFullscreen) {
     elem.webkitRequestFullscreen();
   }
+}
+
+var logStatus = document.getElementById('status');
+function statusUpdate() {
+  var text = '';
+
+  for (var i = 0, type = null; i < CELL_TYPES.length; i++) {
+    type = CELL_TYPES[i];
+    text += '<span style="color: ' + type.color +'">'
+         + type.name + '</span> - ' + (CELLS_COUNT[type.name] / cells.data.length * 100).toString().substr(0, 5)
+         + '%, ';
+  }
+
+  logStatus.innerHTML = text;
 }
