@@ -1,3 +1,5 @@
+'use strict';
+
 var canvas = document.createElement('canvas'),
   ctx = canvas.getContext('2d'),
   WIDTH = 150,
@@ -13,14 +15,19 @@ var canvas = document.createElement('canvas'),
 canvas.setAttribute('width', WIDTH);
 canvas.setAttribute('height', HEIGHT);
 
+window.canvas = canvas;
+window.cells  = cells;
+window.WIDTH  = WIDTH;
+window.HEIGHT = HEIGHT;
+
 //Setup Stats
 stats.setMode(0); // 0: fps, 1: ms
 stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
+document.body.appendChild(stats.domElement);
 
 document.getElementById('container').appendChild(canvas);
-document.body.appendChild(stats.domElement);
 
 function initCellCounts() {
   for (var i = 0; i < CELL_TYPES.length; i++) {
@@ -37,8 +44,7 @@ cells.iterate(function (x, y, idx) {
   ctx.fillRect(x, y, 1, 1);
 });
 
-function eat() {
-  cells.eat();
+function draw() {
   cells.iterate(function (x, y, idx) {
     var CELL = CELL_TYPES[cells.data[idx]];
 
@@ -47,6 +53,11 @@ function eat() {
     ctx.fillRect(x, y, 1, 1);
   });
   statusUpdate();
+}
+
+function eat() {
+  cells.eat();
+  draw();
   initCellCounts();
 }
 
