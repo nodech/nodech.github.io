@@ -70,4 +70,5 @@ canvas {
   height: 5px;
   background: white;
   display: none;
+  opacity: 0.8;
 }
