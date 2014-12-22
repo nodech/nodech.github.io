@@ -61,14 +61,24 @@ container.onclick = function (e) {
     drawer = drawers[i];
 
     drawer.onclick = function () {
-      selected = [this.dataset.sizeX, this.dataset.sizeY];
-      drawGuide.style.display = 'block';
-      drawGuide.style.width = this.dataset.sizeX + 'px';
-      drawGuide.style.height = this.dataset.sizeY + 'px';
-      drawGuide.style.backgroundColor = CELL_TYPES[drawCell.value].color;
+      selectBlock(this.dataset.sizeX, this.dataset.sizeY);
     };
   }
 }());
+
+function selectBlock(x, y) {
+  selected = [x, y];
+  drawGuide.style.display = 'block';
+  drawGuide.style.width = x + 'px';
+  drawGuide.style.height = y + 'px';
+  drawGuide.style.backgroundColor = CELL_TYPES[drawCell.value].color;
+}
+
+function custom() {
+  var w = document.getElementById('sizex').value,
+      h = document.getElementById('sizey').value;
+  selectBlock(w, h);
+}
 
 function changeColor() {
   var color = CELL_TYPES[drawCell.value].color;
