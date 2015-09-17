@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Translate</title>
+    <style>
+      body {
+        margin: 20px;
+      }
+
+      div {
+        float: left;
+      }
+
+      textarea {
+        width: 400px;
+        height: 400px;
+        margin: auto;
+      }
+
+      .clear {
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      From: <br>
+      <textarea id="input"></textarea>
+    </div>
+    <div>
+      To: <br>
+      <textarea id="output"></textarea>
+    </div>
+    <div class="clear">
+      <button onclick="encrypt()">გადაიყვანე</button>
+      <button onclick="decrypt()">აგმდიოვყნაე</button>
+    </div>
+
+    <script>
+      var from = document.getElementById('input');
+      var to = document.getElementById('output');
+
+      function encryptStr(str) {
+        console.log(str);
+        var words = str.split(/[^ა-ჰ]+/g);
+
+        words = words.map(function (word) {
+          var chars = word.split('');
+
+          for (var i = 1, tmp; i < chars.length; i += 2) {
+            tmp = chars[i];
+            chars[i] = chars[i - 1];
+            chars[i - 1] = tmp;
+          }
+
+          return chars.join('');
+        });
+
+        return words.join(' ');
+      }
+
+      function encrypt() {
+        var enc = encryptStr(from.value);
+        to.value = enc;
+      }
+
+      function decrypt() {
+        var dec = encryptStr(to.value);
+        from.value = dec;
+      }
+    </script>
+  </body>
+</html>
