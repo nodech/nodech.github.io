@@ -1388,24 +1388,6 @@
     });
   }
 
-  // Replace requestAnimationFrame.
-  if (topWindow.requestAnimationFrame) {
-    topWindow.requestAnimationFrame = (function(oldRAF) {
-
-      return function(callback, element) {
-        var handler = function() {
-          if (isOnScreen(element)) {
-            oldRAF(callback, element);
-          } else {
-            oldRAF(handler, element);
-          }
-        };
-        handler();
-      };
-
-    }(topWindow.requestAnimationFrame));
-  }
-
 
   topWindow.requestAnimFrame = (function() {
     return topWindow.requestAnimationFrame ||
