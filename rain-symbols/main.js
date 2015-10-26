@@ -4,8 +4,15 @@ var symbols = generateSymbols('ა', 'ჰ');
 var count = 500;
 var bodyEl = document.body;
 
-
 createRandomSpans(count);
+
+
+function getWindowSize() {
+  return {
+    w : window.innerWidth,
+    h : window.innerHeight
+  };
+}
 
 function createRandomSpans(count) {
   var elems = [];
