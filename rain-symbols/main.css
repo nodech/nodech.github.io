@@ -1,0 +1,25 @@
+
+body {
+  overflow: hidden;
+}
+
+span {
+  position: absolute;
+  animation-name: rotate;
+  animation-duration: 2s;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  -webkit-transform: rotateX(0deg) rotateY(360deg); /* Safari */
+  transform: rotateX(0deg) rotateY(360deg) rotateZ(360deg);
+  animation-direction: alternate;
+  top: 10px;
+}
+
+@keyframes rotate {
+  to {
+    -webkit-transform: rotateX(360deg) rotateY(0deg); /* Safari */
+    transform: rotateX(360deg) rotateY(0deg) rotateZ(0deg);
+    top: 1000px;
+  }
+}
