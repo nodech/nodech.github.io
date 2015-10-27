@@ -1,0 +1,510 @@
+<!--
+    Code Author: Nodar Chkuaselidze
+    Start  Date: 01.06.2012
+    Finish Date: 05.06.2012
+    Email:       nodweber@gmail.com
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ლაზიერების ამოცანა</title>
+    <meta charset="UTF-8" />
+    <style>
+      *,body{font-size:14px;font-family:Verdana;margin:0}
+      .head{border-bottom:1px solid #000;font-size:12px;text-align:center;height:35px;padding:10px 5px 5px}
+      .head span{font-size:18px;font-weight:700}
+      input{border:1px solid #ccc;text-align:center}
+      .error{background-color:red}
+      .cont{text-align:center}
+      .table{border:1px solid #eee;text-align:center;display:inline-block;margin:auto}
+      .table div{width:50px;height:50px;background-color:#fff;float:left}
+      .table br{clear:both}
+      .table div.cc{background-color:#ccc}
+      canvas{border:1px solid #ccc}
+      #chessTable{max-width:99.9%;max-height:600px}
+      #queens{max-width:90%}
+    </style>
+    <script>
+    Array.prototype.clone = function() {
+        //shignit arsebuli obieqtebis klonirebas ar axdens
+        //mxolod masivebis (rekursiulad)
+        var newArr = [];
+
+        for( var i = 0; i < this.length; i++ )
+        {
+            if( this[i] instanceof Array )
+                newArr[i] = this[i].clone();
+            else
+                newArr[i] = this[i];
+        }
+        return newArr;
+    }
+
+    //chadraki.js
+    var Dafa = function ( x, y ) {
+
+        if( isNaN( x = parseInt( x ) ) )
+            throw "error x";
+        if( isNaN( y = parseInt( y ) ) )
+            throw "error y";
+
+        this.x = x;
+        this.y = y;
+
+        this.elem = id( "chessTable" ) //element id
+        this.ctx  = this.elem.getContext( "2d" );
+
+        this.draw();
+    }
+
+    Dafa.prototype = {
+        
+        resize : function ( x, y ) {
+            this.x = x;
+            this.y = y;
+            this.draw();
+        }, 
+
+        draw : function( ) {
+            this.elem.width  = this.x * 50;
+            this.elem.height = this.y * 50;
+
+            for( var i = 0; i < this.y; i++ )
+                for( var j = 0; j < this.x; j++ )
+                {
+                    this.ctx.fillStyle = ( ( ( i + ( j % 2 ) ) % 2 )  ? '#fff' : '#ccc' );
+                    this.ctx.fillRect( j * 50, i * 50, 50, 50 );
+                }
+        },
+        errorDraw : function () {
+            for( var i = 0; i < this.y; i++ )
+                for( var j = 0; j < this.x; j++ )
+                {
+                    this.ctx.fillStyle = ( ( ( j + ( i % 2 ) ) % 2 )  ? '#f00' : '#c00' );
+                    this.ctx.fillRect( i * 50, j * 50, 50, 50 );
+                }
+        }, 
+        successDraw : function ( tbl ) {
+            var queen = id( "queen" );
+            for( var i = 0; i < tbl.length; i++ )
+            {
+                for( var j = 0; j < tbl[i].length; j++ )
+                {
+                    this.ctx.fillStyle = ( ( ( i + ( j % 2 ) ) % 2 )  ? '#0f0' : '#0c0' );
+                    this.ctx.fillRect( j * 50, i * 50, 50, 50 );
+                    if( tbl[i][j] == 2 )
+                        this.ctx.drawImage( queen, 0, 0, 50, 50, j * 50, i * 50, 50, 50 );
+                }
+            }
+        },
+        redRect : function( x, y ) {
+            this.ctx.fillStyle = ( ( ( y + ( x % 2 ) ) % 2 )  ? '#f00' : '#c00' );
+            this.ctx.fillRect( x * 50, y * 50, 50, 50 );
+        }, 
+        placeQueen : function( x, y ) {
+            var queen = id( "queen" );
+
+            var tmp = [];
+
+            for( var i = 0; i < this.y; i++ )
+            {
+                tmp[i] = [];
+                for( var j = 0; j < this.x; j++ )
+                    tmp[i][j] = 0;
+            }
+
+            for( var i = 0; i < this.x; i++ ) //x-is mimart
+            {
+                this.redRect( i, y );
+                tmp[y][i] = 1;
+            }
+
+            for( var i = 0; i < this.y; i++ ) //y-is mimart
+            {
+                this.redRect( x, i );
+                tmp[i][x] = 1;
+            }
+
+            //diagonalebi
+            for( var i = x, j = y; i < this.x && j < this.y; j++, i++ )
+            {
+                this.redRect( i, j );
+                tmp[j][i] = 1;
+            }
+            for( var i = x, j = y; i >= 0 && j >= 0; j--, i-- )
+            {
+                this.redRect( i, j );
+                tmp[j][i] = 1;
+            }
+            for( var i = x, j = y; i < this.x && j < this.y && j >= 0; j--, i++ )
+            {
+                this.redRect( i, j );
+                tmp[j][i] = 1;
+            }
+            for( var i = x, j = y; i >= 0 && j >= 0 && j < this.y; j++, i-- )
+            {
+                this.redRect( i, j );
+                this.ctx.fillRect( i * 50, j * 50, 50, 50 );
+                tmp[j][i] = 1;
+            }
+
+            this.ctx.drawImage( queen, 0, 0, 50, 50, x * 50, y * 50, 50, 50 );
+
+            tmp[y][x] = 2;
+
+            return tmp.splice(0);
+        }, 
+        unlock : function( lck ) {
+            for( var i = 0; i < this.y; i++ )
+              for( var j = 0; j < this.x; j++ )
+              {
+                  if( lck[i][j] == 1 )
+                  {
+                      this.ctx.fillStyle = ( ( ( j + ( i % 2 ) ) % 2 )  ? '#fff' : '#ccc' );
+                      this.ctx.fillRect( j * 50, i * 50, 50, 50 );
+                  }
+              }
+        }
+    };
+    //--chadraki.js
+
+    //QueenSpace.js
+    var QueensSpace = function( count ) {
+        this.count   = count;
+
+        var tqn = this;
+
+        id( "queen" ).onload = function() {
+          tqn.queenImg = id( "queen" );
+          tqn.drawQueens();
+        }
+    }
+
+    QueensSpace.prototype = { 
+        drawQueens : function ( ) {
+            var elem = id( "queens" );
+
+            elem.width  = this.count * 50;
+            elem.height = 50;
+
+            var anim = elem.getContext( "2d" );
+
+            for( var i = 0; i < this.count; i++ )
+                anim.drawImage( this.queenImg,  0, 0, 50, 50, i * 50, 0, 50, 50 );
+            this.draw = anim;
+        },
+        queensCount: function( cnt ) {
+            this.count = cnt;
+
+            this.drawQueens();
+        }, 
+        delQueens : function( cnt ) { //when deleting..
+            this.draw.fillStyle = '#fff';
+            for( var i = this.count; i > ( this.count - cnt - 1 ); i-- )
+                this.draw.fillRect( i * 50, 0, 50, 50 );
+        }, 
+        addQueens : function( cnt ) {
+            this.draw.clearRect( 0, 0, this.count * 50, 50 );
+            for( var i = 0; i < this.count - cnt; i++ )
+                this.draw.drawImage( this.queenImg,  0, 0, 50, 50, i * 50, 0, 50, 50 );
+        }
+    }
+    //--QueenSpace.js
+
+    //QueenProblem.js
+    var QueenProblem = function ( speed, random, df, qs ) {
+        this.spd = speed;
+        this.rnd = random;
+        this.df  = df;
+        this.qs  = qs;
+
+        this.x   = df.x;
+        this.y   = df.y;
+   
+        this.table  = []; //1 tu dablokilia, 0 tu dasma sheidzleba
+        this.queens = []; //konkretuli lazieristvis yvela shesadzlo poziciis sia.. 1 im adgilas sadac ukve movsinjet
+        this.lock   = []; //konkretuli lazierebis mier dablokili ujrebis sia
+        this.stepC  = 0;  //bijis raodenoba an y-is is mnishvneloba romel xazzec unda davdot lazieri
+
+        this.nulls  = { 'queens' : [], 'table' : [], 'lock' : [] };
+
+        for( var i = 0; i < this.y; i++ )
+        {
+            this.table[i]  = [];
+            this.queens[i] = [];
+
+            for( var j = 0; j < this.x; j++ )
+            {
+                this.table[i][j]  = 0;
+                this.queens[i][j] = 0;
+            }
+        }
+
+        this.nulls.table  = this.table.clone();
+        this.nulls.queens = this.queens[0].clone();
+        this.nulls.lock   = this.nulls.table;
+
+        for( var i = 0; i < this.y; i++ )
+            this.lock[i]   = this.nulls.lock.clone(); //mxolod 1 ganzomileba imitom rom mxolod 1-i ujra aircheva xazidan
+
+
+    }
+
+    QueenProblem.prototype =  {
+        init : function() {
+            this.end = [ false ];
+
+            var end  = this.end;
+            var qp   = this;
+
+            function automate() {
+                if( !end[0] ) {
+                  setTimeout( function() {
+                     if( !qp.step() ) return;
+                     automate();
+                  }, qp.spd );
+                }
+            }
+            function step() { qp.step(); }
+
+            id( "automatic" ).onclick = automate;
+            id( "nextStep" ).onclick  = step;
+        }, 
+        step : function() {
+            var queenPlace = this.nextPlacement();
+            while( queenPlace == -1 )
+            {
+                this.qs.addQueens( this.stepC );
+                this.stepC--;
+
+                if( this.stepC < 0 )
+                {
+                    this.df.errorDraw();
+                    return false;
+                }
+
+                this.resetInfo( this.stepC, 3 );
+
+                for( var i = this.stepC + 1; i < this.y; i++ )
+                    this.resetInfo( i );
+                queenPlace = this.nextPlacement();
+            }
+
+            var info = this.df.placeQueen( queenPlace, this.stepC );
+
+            for( var i = 0; i < this.y; i++ )
+                for( var j = 0; j < this.x; j++ )
+                {
+                    if( info[i][j] != 0 && this.table[i][j] == 0 )
+                    {
+                          this.lock[this.stepC][i][j] = 1;
+                          this.table[i][j] = info[i][j];
+                    }
+                }
+            this.stepC++;
+            this.qs.delQueens( this.stepC );
+
+            if( this.stepC >= this.qs.count )
+            {
+                this.df.successDraw( this.table );
+                this.end[0] = true;
+                return false;
+            }
+
+            return true;
+        }, 
+        nextPlacement : function () {
+            var x = 0;
+
+            if( !this.rnd ) {
+                while( this.queens[this.stepC][x] != 0 || this.table[this.stepC][x] != 0 ) {
+
+                  this.queens[this.stepC][x] = 1;
+                  x++;
+                  if( x >= this.x )
+                      return -1;
+                } 
+            }
+            else {
+                x = this.rndNum();
+
+                while( this.table[this.stepC][x] != 0 || this.queens[this.stepC][x] != 0 ) {
+                    
+                    this.queens[this.stepC][x] = 1;
+
+                    var tmpck = false;
+                    for( var i = 0; i < this.x; i++ )
+                        if( this.queens[this.stepC][i] == 0 )
+                            tmpck = true;
+                    if( !tmpck )
+                        return -1;
+
+                    x = this.rndNum();
+                }
+            }
+
+            this.queens[this.stepC][x] = 1;
+            return x;
+        }, 
+        resetInfo : function( n, which ) {
+            if( typeof which == "undefined" )
+                which = 7;
+
+            if( which & 1 )
+            {
+              //reset table
+              for( var i = 0; i < this.y; i++ )
+                  for( var j = 0; j < this.x; j++ )
+                  {
+                      if( this.lock[n][i][j] != 0 )
+                          this.table[i][j] = 0;
+                  }
+
+              this.qs.addQueens( this.stepC );
+              this.df.unlock( this.lock[n] );
+            }
+
+            //reset queens and table locks
+
+            if( which & 2 ) this.lock[n]   = this.nulls.lock.clone();
+            if( which & 4 ) this.queens[n] = this.nulls.queens.clone();
+        }, 
+        rndNum : function () {
+            return Math.round( Math.random() * 10000 ) % this.x;
+        }
+    }
+    //--QueenProblem.js
+
+    //Main.js
+    window.onload = function () { 
+        /* shemosuli monacemebis inicializeba da a.sh. **/
+
+        //Load Queen Images
+        var queenImg= 'data:image/png;base64,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';
+        // ' //fix vim highlight
+
+        id( "queen" ).src  = queenImg;
+        id( "queen2" ).src = queenImg;
+
+        var d    = document;
+
+        if( !( id("queens").getContext ) || !( id( "queens" ).getContext( "2d" ) ) ) {
+            alert( "თქვენ ბრაუზერს არ აქვს CANVAS მხარდაჭერა, გთხოვთ გამოიყენოთ უახლესი Google Chrome ან Firefox" );
+            return;
+        }
+
+        id( "size_x" ).setAttribute( 'class', '' );
+        id( "size_y" ).setAttribute( 'class', '' );
+
+        var sizex = parseInt( id( "size_x").value );
+        var sizey = parseInt( id( "size_y").value );
+
+        var df = new Dafa( sizex, sizey );
+        var qs = new QueensSpace( lazierebis_raodenoba() );
+
+        id( "clear" ).onclick = function() {
+            df.constructor( sizex, sizey );
+            qs.constructor( lazierebis_raodenoba() );
+            id( "options" ).style.display = 'none';
+        }
+
+        id( "size_x" ).onchange = function() {
+            this.removeAttribute( 'class' );
+            if( isNaN( this.value ) || this.value < 1 )
+                error( "size_x" );
+
+            sizex = this.value;
+
+            qs.queensCount( lazierebis_raodenoba() );
+
+            id("clear").onclick.apply( id( "clear" ) );
+        }
+
+
+        id( "size_y" ).onchange = function() {
+            this.removeAttribute( 'class' );
+            if( isNaN( this.value ) || this.value < 1 )
+                error( "size_y" );
+
+            sizey = this.value;
+            qs.queensCount( lazierebis_raodenoba() );
+
+            id("clear").onclick.apply( id( "clear" ) );
+        }
+
+        id( "msec" ).onchange = function() {
+            id( "msec" ).setAttribute( 'class', '' );
+            var speed = parseInt( id( "msec" ).value );
+            if( isNaN( speed ) ) return error( "msec" );
+
+            id("clear").onclick.apply( id( "clear" ) );
+        }
+
+
+        id( "start" ).onclick = function () { 
+            id("clear").onclick.apply( id( "clear" ) );
+
+            var speed = id("msec").value;
+            var rand  = id( "random" );
+
+            id( "options" ).style.display = "block";
+
+            df.draw();
+            qs.drawQueens();
+
+            var algorithm = new QueenProblem( speed, rand.checked, df, qs );
+            algorithm.init();
+        }
+
+        function lazierebis_raodenoba(){
+            var count = Math.min( sizex, sizey );
+            id( "lasier_count" ).innerHTML = count;
+            dafis_xatva();
+
+            return count;
+        }
+
+        function dafis_xatva() {
+            df.resize( sizex, sizey );
+        }
+    }
+
+    function error( vid ) {
+        id( vid ).setAttribute( 'class', 'error' );
+
+        error = error || "error :" + id + " !";
+        return error;
+    }
+
+    function id( eid ) {
+      return document.getElementById( eid );
+    }
+    //--Main.js
+
+
+    </script>
+  </head>
+  <body>
+    <img id="queen" src="" width="50" height="50" style="top: 0px; left: 0px; position: absolute;" />
+    <img id="queen2" src="" width="50" height="50" style="top: 0px; right: 0px; position: absolute;" />
+    <div class="head">
+      ლაზიერების რაოდანობა <b id="lasier_count"></b> <span>|</span>
+      ჩვენების სიჩქარე: <input type="text" id="msec" size="2" value="500" /> მილიწამი <span>|</span>
+      დაფა: <input type="text" id="size_x" size="2" value="8" /> x <input type="text" id="size_y" size="2" value="8" /> <span>|</span>
+      <label>შემთხვევითი <input type="checkbox" checked="checked" id="random" /></label> <span>|</span>
+      <button id="start">ინიციალიზება</button>
+    </div>
+    <div class="cont">
+        <div style="clear:both"></div>
+        <div style="display: none" id="options">
+          <button id="nextStep">საფეხური+</button>
+          <button id="automatic">ანიმაცია</button>
+          <button id="clear">გასუფთავება</button>
+        </div>
+        <br />
+        <canvas id="queens"></canvas>
+        <br />
+        <canvas id="chessTable"></canvas>
+    </div>
+  </body>
+</html>
