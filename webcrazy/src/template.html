@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Tye" content="text/html;charset=utf-8">
+  <title>ქართულსკრიპტი</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="css/highlight/default.css">
+  <link rel="stylesheet" href="css/qartulskripti.css">
+</head>
+<body data-spy="scroll" data-target="div[role=menu]">
+  <div id="code">
+    <textarea id="writeCode">თუ ჯანდაბა მეტია 2 ზე მაშინ alert(123);</textarea>
+    <textarea id="readCode" readonly></textarea>
+    <div class="console">
+      <div id="console"></div>
+      <button>X</button>
+    </div>
+    <button>შეასრულე</button>
+  </div>
+  <header>
+    <div class="container">
+      <h1>ქართულ<span>სკრიპტი</span></h1>
+      <button id="run" class="btn run-btn">RUN</button>
+    </div>
+  </header>
+  <div class="container" role="main">
+    <div class="row">
+      <div class="col-md-3" role="menu">
+        <div data-spy="affix" data-offset-top="60" data-offset-bottom="160">
+          <ul class="nav qs-nav">
+            <% for(var i = 0; i < DOCS.length; i++) {
+                 var menuBlock = DOCS[i];
+                 for(var j = 0; j < menuBlock.length; j++) {
+                  var item = menuBlock[j];
+            %><li<%- (i == 0 && j == 0) ? ' class="active"' : ''%>><a href="#<%= content[item].id %>"><%= content[item].name %></a></li>
+            <%   } %><li class="split-menu"></li>
+            <% } %>
+          </ul>
+        </div>
+      </div> <!-- /menu -->
+      <div class="col-md-9" role="content">
+        <%- Array.prototype.concat.apply([], DOCS).map(function (doc) { return content[doc].content; }).join('') %>
+      </div> <!-- /content -->
+    </div> <!-- /row -->
+  </div> <!-- /main -->
+  <footer>
+  </footer>
+  <script src="vendor/jquery/jquery-2.1.1.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/qartulskripti.js"></script>
+  <script src="js/mtavari.qs" type="text/qartulskripti"></script>
+</body>
+</html>

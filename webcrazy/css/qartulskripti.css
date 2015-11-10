@@ -1,0 +1,229 @@
+body {
+  margin-top: 20px;
+  font-family: Sans-Serif;
+}
+
+header {
+  background-color: #5C7883;
+  color: white;
+  margin-bottom: 20px;
+}
+
+header .container {
+}
+
+header h1 {
+  font-size: 20px;
+  margin: 5px auto 5px 20px;
+}
+
+header h1 span {
+  color: orange;
+}
+
+#code {
+  position: fixed;
+  z-index: 3;
+  color: black;
+  border: 1px solid #444;
+  display: none;
+
+  top: 20px;
+  bottom: 20px;
+  left: 40px;
+  right: 40px;
+  padding: 5px;
+  background-color: transparent;
+}
+
+#code > textarea {
+  border: 0px solid #ccc;
+  width: 50%;
+  height: 100%;
+  float: left;
+  resize: none;
+  padding: 5px;
+  color: white;
+  background-color: rgba(24, 26, 58, 0.9);
+  font-size: 13px;
+  font-family: Monaco,Consolas,"Lucida Console",monospace;
+  overflow: auto;
+}
+
+#code > #writeCode {
+  border-right-width: 1px;
+}
+
+#code > #readCode {
+}
+
+#code button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: white;
+  border-radius: 10px;
+  border: 0px;
+  padding: 5px;
+}
+
+#code > .console {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  bottom: 5px;
+  right: 0px;
+  background-color: white;
+  padding: 5px;
+}
+
+#code > .console > button {
+  border: 1px solid black;
+  width: 25px;
+  height: 25px;
+  padding: 0px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#console {
+  white-space: pre-line;
+  height: 100%;
+  overflow: scroll;
+  line-height: 15px;
+}
+
+.run-btn {
+  display: block;
+  width: 100px;
+  font-family: Verdana;
+  font-size: 14px;
+  color: #5E6790;
+  background-color: white;
+  border-radius: 0px;
+  position: absolute;
+  top: 20px;
+  right: 10%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.run-btn:hover {
+  border: 1px solid #5C7883;
+}
+
+
+@media (max-width: 768px) {
+  .code {
+    left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 992px) {
+  div[role=menu] > .affix {
+    width: 213px;
+    position: static;
+    margin: 0 0 0 auto;
+  }
+}
+
+@media (min-width: 992px) {
+  div[role=menu] > .affix {
+    width: 213px;
+  }
+}
+
+@media (min-width: 1200px) {
+  div[role=menu] > .affix {
+    width: 263px;
+  }
+}
+
+div[role=menu] > .affix {
+  top: 10px;
+}
+
+.qs-nav > li {
+  margin-right: 5px;
+  text-align: right;
+}
+
+.qs-nav > li > a {
+  padding: 1px 5px 2px 1px;
+}
+
+.qs-nav > li.active > a {
+  font-weight: bold;
+  border-right: 2px solid #647D9A;
+}
+
+.qs-nav > li > a:hover {
+  background: inherit;
+}
+
+.split-menu {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+footer {
+  height: 200px;
+}
+
+
+.inline-code, i {
+  font-style: normal;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 2px;
+  border-radius: 2px;
+}
+
+.qartulskripti-code {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  padding-top: 0px;
+  line-height: 18px;
+  font-size: 12px;
+  line-height: 14px;
+  font-family: Verdana, Monospace, "courier new";
+  position: relative;
+}
+
+.qartulskripti-code:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.qartulskripti-code pre {
+  width: 50%;
+  float: left;
+  display: block;
+  word-wrap: normal;
+  background-color: #f9f9f9;
+  overflow: hidden;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  border-radius: 0px;
+}
+
+.qartulskripti-code pre:last-child {
+  border-left: 1px solid #ccc;
+  padding-left: 5px;
+}
+
+.qartulskripti-code button {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+}
+
+.table th, .table td {
+  text-align: center;
+}
