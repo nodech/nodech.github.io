@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Automata</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="main.css">
+  </head>
+  <body>
+    <div id="container"></div>
+    <div class="controls">
+      <button onclick="start()">Start Animation</button>
+      <button onclick="pause()">Pause Animation</button>
+      <button onclick="nextFrame()">Next Frame</button>
+    </div>
+    <div id="status"></div>
+    <div id="drawing">
+      <select id="draw_cell" disabled>
+      </select>
+      <div class="drawer size5"   data-size-x="5" data-size-y="5"></div>
+      <div class="drawer size50"  data-size-x="50" data-size-y="50"></div>
+      <div class="drawer size100" data-size-x="100" data-size-y="100"></div>
+      <div>
+        X: <input type="number" min="0" max="500" id="sizex" width="4"> <br>
+        Y: <input type="number" min="0" max="500" id="sizey" width="4"> <br>
+        <button onclick="custom()">Select Custom</button>
+      </div>
+      <button onclick="disselect()">Disselect</button>
+    </div>
+    <script>
+    var CELL_TYPES = [{
+        name  : 'FIRST',
+        color : '#f00',
+        eats  : ['SECOND', 'THIRD', 'FOURTH'],
+        prob  : [0.1, 0.1, 0.1]
+      }, {
+        name  : 'SECOND',
+        color : '#0f0',
+        eats  : ['FIRST', 'THIRD', 'FOURTH'],
+        prob  : [0.1, 0.1, 0.1]
+      }, {
+        name  : 'THIRD',
+        color : '#00f',
+        eats  : ['FIRST', 'SECOND', 'FOURTH'],
+        prob  : [0.1, 0.1, 0.1]
+      }, {
+        name  : 'FOURTH',
+        color : '#ff0',
+        eats  : ['FIRST', 'SECOND', 'THIRD'],
+        prob  : [0.1, 0.1, 0.1]
+      }
+    ];
+    </script>
+    <script src="http://static.lifedrift.org/render/dat.gui.min.js"></script>
+    <script src="http://static.lifedrift.org/render/stats.min.js"></script>
+    <script src="./common.js"></script>
+    <script src="./datgui.js"></script>
+    <script src="./cells.js"></script>
+    <script src="./index.js"></script>
+    <script src="./draw.js"></script>
+  </body>
+</html>
