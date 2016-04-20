@@ -14,14 +14,18 @@ var STEPS = document.getElementById('steps');
 draw();
 
 function draw() {
-  var steps = STEPS.value;
+  var steps = parseInt(STEPS.value);
   var from  = FROM.value;
   var to    = TO.value;
 
   ERROR.innerHTML = '';
 
-  if (!parseInt(steps)) {
+  if (!steps) {
     return error('incorrect steps')
+  }
+
+  if (steps > 5000) {
+    return error('too many steps, sorry');
   }
 
   if (!hexToRGB(from)) {
