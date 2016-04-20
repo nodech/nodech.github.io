@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Gradient Test</title>
+</head>
+<body>
+  <canvas id="gradient" width="500" height="500">Canvas not supported?? Are you kidding?</canvas>
+
+  <div style="text-align: center">
+    <div id="error"></div>
+    FROM: <input id="start" placeholder="#startColor" value="#000">
+    TO: <input id="end" placeholder="#endColor" value="#f00">
+    STEPS: <input id="steps" placeholder="steps" type="number" value="10" min="0" max="500">
+  </div>
+
+  <style>
+    canvas {
+      border: 1px solid gray;
+      margin: auto;
+      width: 500px;
+      height: 500px;
+      display: block;
+    }
+
+    div {
+      margin-top: 10px;
+    }
+  </style>
+  <script src="./gradient.js"></script>
+  <script src="./test.js"></script>
+</body>
+</html>
