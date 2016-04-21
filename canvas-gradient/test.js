@@ -5,11 +5,17 @@ var ERROR = document.getElementById('error');
 var FROM  = document.getElementById('start');
 var TO    = document.getElementById('end');
 var STEPS = document.getElementById('steps');
+var EQ    = document.getElementById('equation');
 
-[FROM, TO, STEPS].forEach(function (el) {
+[FROM, TO, STEPS, EQ].forEach(function (el) {
   el.onkeyup = draw;
   el.onchange = draw;
 });
+
+var Fns = {
+  'linear' : linearEquation,
+  'quadratic' : quadraticEquation
+};
 
 draw();
 
@@ -36,7 +42,7 @@ function draw() {
     return error('incorrect color To(' + to + ')');
   }
 
-  var colors = gradientPoints(from, to, steps);
+  var colors = linearGradientEq(from, to, steps, Fns[EQ.value]);
   drawLines(colors);
 }
 

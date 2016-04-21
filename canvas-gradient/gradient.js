@@ -42,29 +42,39 @@ function digit16to10(digit) {
   return code - 55;
 }
 
-// gradient
-function gradientPoints(colorA, colorB, steps) {
+//Main calculations
+function calculateInfo(colorA, colorB, steps) {
+  var color = {};
+
+  color.min   = colorA;
+  color.max   = colorB;
+  color.diff  = colorB - colorA;
+  color.norm  = normalizeNumber(colorA, colorB);
+  color.stepX = color.diff / steps;
+  color.steps = steps;
+
+  return color;
+}
+
+function linearGradientEq(colorA, colorB, steps, fn) {
   colorA = hexToRGB(colorA);
   colorB = hexToRGB(colorB);
   steps  = steps || 0;
   steps  = steps < 0 ? 0 : steps;
+  //steps++;
 
-  steps++;
+  var r = calculateInfo(colorA.r, colorB.r, steps);
+  var g = calculateInfo(colorA.g, colorB.g, steps);
+  var b = calculateInfo(colorA.b, colorB.b, steps);
 
-  var colors = [ colorA ];
-  var step = {
-    r : (colorA.r - colorB.r) / steps,
-    g : (colorA.g - colorB.g) / steps,
-    b : (colorA.b - colorB.b) / steps
-  };
+  var colors = [colorA];
 
-  for (var i = 1, prev; i < steps; i++) {
-    prev = colors[i - 1];
-
+  for (var i = 1; i < steps; i++) {
+    var x = Math.round(colorA.r + fn(r, i))
     colors.push({
-      r : prev.r - step.r,
-      g : prev.g - step.g,
-      b : prev.b - step.b
+      r : Math.round(colorA.r + fn(r, i)),
+      g : Math.round(colorA.g + fn(g, i)),
+      b : Math.round(colorA.b + fn(b, i))
     });
   }
 
@@ -72,3 +82,33 @@ function gradientPoints(colorA, colorB, steps) {
 
   return colors;
 }
+
+function normalizeNumber(min, max) {
+  var diff = max - min;
+
+  if (diff == 0) return 0;
+
+  return 1 / (max - min);
+}
+
+function denormalizeNumber(number, diff) {
+  return number * diff;
+}
+
+//equations
+
+//y = x
+function linearEquation(color, step) {
+  var toCol = color.stepX * step;
+  var calc = color.norm * toCol;
+
+  return denormalizeNumber(calc, color.diff);
+}
+
+function quadraticEquation(color, step) {
+  var toCol = color.stepX * step;
+  var calc = Math.sqrt(color.norm * 2 * toCol)
+
+  return denormalizeNumber(calc, color.diff);
+}
+
