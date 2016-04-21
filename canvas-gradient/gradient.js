@@ -56,7 +56,7 @@ function calculateInfo(colorA, colorB, steps) {
   return color;
 }
 
-function linearGradientEq(colorA, colorB, steps, fn) {
+function gradientEq(colorA, colorB, steps, fn) {
   colorA = hexToRGB(colorA);
   colorB = hexToRGB(colorB);
   steps  = steps || 0;

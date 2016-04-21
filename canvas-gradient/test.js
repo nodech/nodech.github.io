@@ -43,7 +43,7 @@ function draw() {
     return error('incorrect color To(' + to + ')');
   }
 
-  var colors = linearGradientEq(from, to, steps, Fns[EQ.value]);
+  var colors = gradientEq(from, to, steps, Fns[EQ.value]);
   drawLines(colors);
 }
 
