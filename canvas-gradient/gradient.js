@@ -107,8 +107,14 @@ function linearEquation(color, step) {
 
 function quadraticEquation(color, step) {
   var toCol = color.stepX * step;
-  var calc = Math.sqrt(color.norm * 2 * toCol)
+  var calc = Math.pow(color.norm * toCol, 2)
 
   return denormalizeNumber(calc, color.diff);
 }
 
+function sqrtEquation(color, step) {
+  var toCol = color.stepX * step;
+  var calc = Math.sqrt(color.norm * toCol)
+
+  return denormalizeNumber(calc, color.diff);
+}

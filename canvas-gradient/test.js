@@ -14,7 +14,8 @@ var EQ    = document.getElementById('equation');
 
 var Fns = {
   'linear' : linearEquation,
-  'quadratic' : quadraticEquation
+  'quadratic' : quadraticEquation,
+  'sqrt' : sqrtEquation
 };
 
 draw();
