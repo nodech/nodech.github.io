@@ -6,12 +6,13 @@
 </head>
 <body>
   <canvas id="gradient" width="500" height="500">Canvas not supported?? Are you kidding?</canvas>
+  <div id="container"></div>
 
   <div style="text-align: center">
     <div id="error"></div>
     FROM: <input id="start" placeholder="#startColor" value="#000">
     TO: <input id="end" placeholder="#endColor" value="#fa0000">
-    STEPS: <input id="steps" placeholder="steps" type="number" value="500" min="0" max="500">
+    STEPS: <input id="steps" placeholder="steps" type="number" value="200" min="0" max="500">
     EQUATIONS: <select id="equation">
       <option value="linear" selected="selected">Linear</option>
       <option value="quadratic">Quadratic</option>
@@ -30,6 +31,11 @@
 
     div {
       margin-top: 10px;
+    }
+
+    #container div {
+      margin: 0;
+      height: 1px;
     }
   </style>
   <script src="./gradient.js"></script>

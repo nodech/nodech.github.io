@@ -59,6 +59,20 @@ function drawLines(colors) {
   });
 }
 
+function drawDivs(colors) {
+  var elem = document.getElementById('container');
+  elem.innerHTML = '';
+
+  colors.forEach(function (color, i) {
+    var r = Math.round(color.r);
+    var g = Math.round(color.g);
+    var b = Math.round(color.b);
+
+    var div = '<div style="background-color: rgb(' + r + ',' + g + ',' + b + ')"></div>' ;
+    elem.innerHTML += div;
+  });
+}
+
 function error(err) {
   ERROR.innerHTML = err;
 }
