@@ -56,40 +56,26 @@ function calculateDebt(date) {
 }
 
 function calculate2016(base, sum, month) {
-  if (month < 5) {
+  if (month < 5)
     return sum;
-  }
 
-  if (month > 10) {
-    sum = base * 0.15 + sum;
-    return calculate2016(base, sum, month - 1);
-  }
+  let percent = 0.15;
 
-  if (month > 7) {
-    sum = base * 0.10 + sum;
-    return calculate2016(base, sum, month - 1);
-  }
+  if (month <= 10) percent = 0.10;
+  if (month <= 7) percent = 0.05;
 
-  if (month > 4) {
-    sum = base * 0.05 + sum;
-    return calculate2016(base, sum, month - 1);
-  }
+  sum = base * percent + sum;
+  return calculate2016(base, sum, month - 1);
 }
 
 function calculate2017(prev, month) {
-  if (month == 1) return prev;
+  if (month <= 1)
+    return prev;
 
-  if (month > 7) {
-    return calculate2017(prev + prev * 0.15, month - 1);
-  }
+  let percent = 0.15;
 
-  if (month > 4) {
-    return calculate2017(prev + prev * 0.10, month - 1);
-  }
+  if (month <= 7) percent = 0.10;
+  if (month <= 4) percent = 0.05;
 
-  if (month > 1) {
-    return calculate2017(prev + prev * 0.05, month - 1);
-  }
-
-  return prev;
+  return calculate2017(prev + prev * percent, month - 1);
 }
