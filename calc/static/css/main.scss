@@ -1,0 +1,153 @@
+@import './colors';
+
+body {
+  margin: 0px;
+  background: $bgcolor;
+  color: $fontColor;
+}
+
+header {
+  color: #eee;
+  width: 90%;
+  height: 40px;
+  background-color: $headerBgColor;
+  margin: 20px auto;
+  padding-top: 10px;
+  box-sizing: border-box;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid $headerBorder;
+  border-radius: 20px;
+  border-width: 0px 1px 0px 1px;
+}
+
+.calculator {
+  width: 90%;
+  margin: auto;
+}
+
+.calculator .time {
+  .line {
+    height: 1px;
+    background-color: $sliderColor;
+  }
+
+  #select {
+    position: relative;
+  }
+
+  .selector {
+    width: 120px;
+    height: 20px;
+    margin-top: -10px;
+
+    border-top: 1px solid black;
+    background: $sliderColor;
+    text-align: center;
+    color: white;
+  }
+}
+
+input {
+  border-radius: 20px;
+  border: 0px;
+  padding: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#topay {
+  margin-top: 50px;
+
+  input {
+    width: 140px;
+    height: 20px;
+  }
+}
+
+.money {
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+@for $i from 1 through 8 {
+  .money-#{$i} {
+    background-image: url('../img/#{$i}.png');
+  }
+}
+
+$pipeHeight : 150px;
+.poop {
+  .pipe {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 70%;
+    width: 40px;
+    height: $pipeHeight;
+    background-color: black;
+    background: #2a80d6;
+    background: -moz-linear-gradient(left,  #2a80d6 1%, #1e5799 3%, #1e5799 39%, #207cca 43%, #207cca 100%);
+    background: -webkit-linear-gradient(left,  #2a80d6 1%,#1e5799 3%,#1e5799 39%,#207cca 43%,#207cca 100%);
+    background: linear-gradient(to right,  #2a80d6 1%,#1e5799 3%,#1e5799 39%,#207cca 43%,#207cca 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a80d6', endColorstr='#207cca',GradientType=1 );
+
+    &:after {
+      position: absolute;
+      top: $pipeHeight;
+      left: -10px;
+      width: 60px;
+      height: 30px;
+      content: ' ';
+      display: block;
+      background: #1e5799;
+    }
+  }
+  
+  .poo {
+    position: absolute;
+    top: $pipeHeight + 100px;
+    left: 70%;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    animation-name: pooScale;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+  }
+
+  .pooDrops {
+    left: 70%;
+    width: 200px;
+    height: 50px;
+    margin-left: -80px;
+    text-align: center;
+    position: absolute;
+    top: $pipeHeight - 20px;
+    animation-name: pooDrop;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    z-index: -2;
+  }
+}
+
+@keyframes pooDrop {
+  from {
+    top: $pipeHeight - 20px;
+  }
+
+  to {
+    top: $pipeHeight + 100px;
+  }
+}
+
+@keyframes pooScale {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.1);
+  }
+}
