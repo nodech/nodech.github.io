@@ -2,7 +2,7 @@ var nums = document.getElementById('nums');
 var start = '<table>';
 var end = '</table>';
 
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < 100; i++) {
   var html = '<tr>';
   for (var j = 0; j < 100; j++) {
     var num = j + (i * 100);
