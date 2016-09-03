@@ -1,5 +1,7 @@
 # Nodari Chkuaselidze
-  * <nodar.chkuaselidze@gmail.com>
+  * Year of birth: 1991
+  * nodar.chkuaselidze@gmail.com
+  * http://github.com/nodar-chkuaselidze/
 
 # About Me
 
