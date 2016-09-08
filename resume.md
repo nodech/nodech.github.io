@@ -32,11 +32,16 @@ I like distributed systems, microservices, Blockchain, realtime applications and
   * D3
   * WebRTC
   * and most of the HTML5 technologies.
-
+ 
+### Other Tech stuff
+  * Messaging (RabbitMQ, ZeroMQ)
+  * Docker
+  * ...
+  
 # Education
-  Computer Science, B.S.
-  2010 - 2015
-  Tbilisi State University, Tbilisi, Georgia
+  Computer Science, B.S.  
+  2010 - 2015  
+  Tbilisi State University, Tbilisi, Georgia  
 
 # Employment History
 ## Cloud Architect (Remote) @ Securifi - 2015 February - 2016 August
