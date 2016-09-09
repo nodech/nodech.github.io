@@ -1,0 +1,25 @@
+body {
+  margin: 0px;
+}
+
+table {
+  margin: 0 auto;
+}
+
+thead {
+  tr {
+    td {
+      border-bottom: 1px solid black;
+    }
+
+    td.sort {
+      font-weight: bold;
+    }
+  }
+}
+
+tbody {
+  tr:nth-child(-n+20) {
+    background-color: #efe;
+  }
+}
