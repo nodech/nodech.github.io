@@ -90,6 +90,28 @@ var SOURCES = {
   }
 };
 
+var DRAW_METHODS = {
+  'moreblack' : function (data) {
+    var rndMap = Array(MAX-MIN);
+
+    UpdateCanvasSize(MAX-MIN);
+
+    var min = MAX;
+    var max = MIN;
+
+    for (var i = 0; i < data.count; i++) {
+      var n = data.data[i];
+      var old = rndMap[n - MIN] || 0;
+
+      rndMap[n - MIN] = old + 1;
+      max = Math.max(old + 1, max);
+      min = Math.min(old + 1, min);
+    }
+
+    DrawNumbers(rndMap, min - 1, max);
+  }
+};
+
 gid('rand-update').onclick = function () {
   var max = parseInt(gid('rand-max').value, 10);
   var min = parseInt(gid('rand-min').value, 10);
@@ -124,27 +146,20 @@ function UpdateRandoms() {
   }
 
   var data = SOURCES[DATA_SOURCE]();
-  var rndMap = Array(MAX-MIN);
 
   if (!data) {
+    alert('Sorry, couldn\'t get data');
     return;
   }
 
-  UpdateCanvasSize(MAX-MIN);
+  var draw = DRAW_METHODS[gid('draw').value];
 
-  var min = MAX;
-  var max = MIN;
-
-  for (var i = 0; i < data.count; i++) {
-    var n = data.data[i];
-    var old = rndMap[n - MIN] || 0;
-
-    rndMap[n - MIN] = old + 1;
-    max = Math.max(old + 1, max);
-    min = Math.min(old + 1, min);
+  if (!draw) {
+    DRAW_METHODS['moreblack'](data);
+    return
   }
 
-  DrawNumbers(rndMap, min - 1, max);
+  draw(data);
 }
 
 function DrawNumbers(rndMap, min, max) {
