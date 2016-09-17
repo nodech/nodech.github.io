@@ -179,7 +179,8 @@ function MoreBlack(data) {
 
   gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
     + 'scale: ' + scaleX + 'x' + scaleY + ', '
-    + 'size: ' + size + 'x' + size;
+    + 'size: ' + size + 'x' + size + ', '
+    + 'max number range:' + (WIDTH * HEIGHT);
 
   for (var i = 0; i < rndMap.length; i++) {
     var n = rndMap[i];
@@ -210,7 +211,8 @@ function DifferentColors(DATA) {
 
   gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
     + 'scale: ' + scaleX + 'x' + scaleY + ', '
-    + 'size: ' + size + 'x' + size;
+    + 'size: ' + size + 'x' + size
+    + 'max numbers: ' + (WIDTH * HEIGHT);
 
   for (var i = 0; i < data.length; i++) {
     var n = data[i];
