@@ -11,24 +11,10 @@ var WIDTH = 500;
 var HEIGHT = 500;
 var BACKGROUND_COLOR = '#fff';
 
-//choose data
-DATA_SOURCES.map(function (id, i, arr) {
-  var getButton = function (id) { return gid('choose-' + id); };
-  var getSource = function (id) { return select('.' + id);   };
-  var hideBoth  = function () {
-    arr.map(function (id) {
-      getButton(id).setAttribute('class', '');
-      getSource(id).style.display = 'none';
-    })
-  };
-
-  document.getElementById('choose-' + id).onclick = function (el) {
-    hideBoth();
-    this.setAttribute('class', 'active');
-    getSource(id).style.display = 'block';
-    DATA_SOURCE = id;
-  }
-})
+var DRAW_METHODS = {
+  'moreblack' : MoreBlack,
+  'diffcolors' : DifferentColors,
+};
 
 var GENERATORS = {
   'javascript' : function (min, max) {
@@ -82,7 +68,6 @@ var SOURCES = {
       data.push(GENERATORS[generator](MIN, MAX))
     }
 
-    console.log(data);
     return {
       data  : data,
       count : count
@@ -90,9 +75,26 @@ var SOURCES = {
   }
 };
 
-var DRAW_METHODS = {
-  'moreblack' : MoreBlack,
-};
+//RUN
+//choose data
+DATA_SOURCES.map(function (id, i, arr) {
+  var getButton = function (id) { return gid('choose-' + id); };
+  var getSource = function (id) { return select('.' + id);   };
+  var hideBoth  = function () {
+    arr.map(function (id) {
+      getButton(id).setAttribute('class', '');
+      getSource(id).style.display = 'none';
+    })
+  };
+
+  document.getElementById('choose-' + id).onclick = function (el) {
+    hideBoth();
+    this.setAttribute('class', 'active');
+    getSource(id).style.display = 'block';
+    DATA_SOURCE = id;
+  }
+})
+
 
 gid('rand-update').onclick = function () {
   var max = parseInt(gid('rand-max').value, 10);
@@ -111,6 +113,7 @@ gid('rand-update').onclick = function () {
 
 gid('generator-update').onclick = gid('data-update').onclick = UpdateRandoms;
 
+//Main Validator and executioner
 function UpdateRandoms() {
   if (isNaN(MAX) || isNaN(MIN)) {
     alert('Couldn\'t find min/max');
@@ -165,15 +168,14 @@ function MoreBlack(data) {
 
   min = min -1;
 
-  var canvas = select('canvas');
-  var draw2d = canvas.getContext('2d');
+  var ctx = getCtx()
   var norm   = 1 / (max - min);
   var size   = csize(rndMap.length);
 
   var scaleX = WIDTH / size;
   var scaleY = HEIGHT / size;
 
-  draw2d.scale(scaleX, scaleY);
+  ctx.scale(scaleX, scaleY);
 
   gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
     + 'scale: ' + scaleX + 'x' + scaleY + ', '
@@ -187,12 +189,37 @@ function MoreBlack(data) {
     var alpha = (n - min) * norm;
     var coords = numberToPixel(i, rndMap.length);
 
-    draw2d.fillStyle = 'rgba(0, 0, 0, ' + alpha + ')'
-    draw2d.fillRect(coords.x, coords.y, 1, 1);
+    ctx.fillStyle = 'rgba(0, 0, 0, ' + alpha + ')'
+    ctx.fillRect(coords.x, coords.y, 1, 1);
   }
 }
 
-function DifferentColors(data) {
+function DifferentColors(DATA) {
+  data = DATA.data;
+
+  updateCanvasSize(data.length);
+  var colors = Math.pow(2, 24);
+  var each = colors / (MAX - MIN);
+  var ctx  = getCtx();
+  var size = csize(data.length);
+
+  var scaleX = WIDTH / size;
+  var scaleY = HEIGHT / size;
+
+  ctx.scale(scaleX, scaleY);
+
+  gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
+    + 'scale: ' + scaleX + 'x' + scaleY + ', '
+    + 'size: ' + size + 'x' + size;
+
+  for (var i = 0; i < data.length; i++) {
+    var n = data[i];
+    var col = Math.round((n - MIN) * each);
+    var coords = numberToPixel(i, data.length);
+
+    ctx.fillStyle = base10ToHexColor(col);
+    ctx.fillRect(coords.x, coords.y, 1, 1);
+  }
 }
 
 //helpers
@@ -216,6 +243,10 @@ function numberToPixel(number, count) {
   return { x : x, y : y };
 }
 
+function getCtx() {
+  return select('canvas').getContext('2d');
+}
+
 function csize(count) {
   return Math.ceil(Math.sqrt(count))
 }
@@ -230,4 +261,10 @@ function select(selector) {
 
 function toArray(nodeList) {
   return Array.prototype.slice.call(nodeList);
+}
+
+function base10ToHexColor(num) {
+  var str = num.toString(16);
+
+  return '#' + '0'.repeat(6 - str.length) + str;
 }
