@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Numbers</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Random Number Generator</h1>
+    <div class="rand-range">
+      <h4>Random Numbers Range</h4>
+      <input type="number" id="rand-min" placeholder="min" value="0" />
+      <input type="number" id="rand-max" placeholder="max" value="100" />
+      <input type="button" id="rand-update" value="Update" />
+    </div>
+    <br />
+
+    <div class="choose-data">
+      <input id="choose-json" type="button" value="Use Array">
+      <input id="choose-generator" type="button" value="Use Generator">
+    </div>
+
+    <div class="generator choose">
+      <h4>Pseudo Random Number Generator</h4>
+      <input type="number" id="generator-numbers" value="1000">
+      <select id="generator-method">
+        <option value="javascript">Javascript</option>
+      </select>
+      <input type="button" id="generator-update" value="Generate">
+    </div>
+
+
+    <div class="json choose">
+      <h4>Numbers data</h4>
+      <textarea id="data">[2, 4, 41, 23, 23]</textarea><br />
+      <input type="button" id="data-update" value="Update">
+    </div>
+
+    <div class="canvas">
+      <h4>Canvas</h4>
+      <span id="canvas-size"></span><br />
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+  <script src="./index.js"></script>
+</body>
+</html>
