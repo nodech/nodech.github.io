@@ -108,7 +108,33 @@ var DRAW_METHODS = {
       min = Math.min(old + 1, min);
     }
 
-    DrawNumbers(rndMap, min - 1, max);
+    min = min -1;
+
+    var canvas = select('canvas');
+    var draw2d = canvas.getContext('2d');
+    var norm   = 1 / (max - min);
+    var size   = csize(rndMap.length);
+
+    var scaleX = WIDTH / size;
+    var scaleY = HEIGHT / size;
+
+    draw2d.scale(scaleX, scaleY);
+
+    gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
+      + 'scale: ' + scaleX + 'x' + scaleY + ', '
+      + 'size: ' + size + 'x' + size;
+
+    for (var i = 0; i < rndMap.length; i++) {
+      var n = rndMap[i];
+
+      if (!n || isNaN(n)) continue;
+
+      var alpha = (n - min) * norm;
+      var coords = NumberToPixel(i, rndMap.length);
+
+      draw2d.fillStyle = 'rgba(0, 0, 0, ' + alpha + ')'
+      draw2d.fillRect(coords.x, coords.y, 1, 1);
+    }
   }
 };
 
@@ -160,34 +186,6 @@ function UpdateRandoms() {
   }
 
   draw(data);
-}
-
-function DrawNumbers(rndMap, min, max) {
-  var canvas = select('canvas');
-  var draw2d = canvas.getContext('2d');
-  var norm   = 1 / (max - min);
-  var size   = csize(rndMap.length);
-
-  var scaleX = WIDTH / size;
-  var scaleY = HEIGHT / size;
-
-  draw2d.scale(scaleX, scaleY);
-
-  gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
-    + 'scale: ' + scaleX + 'x' + scaleY + ', '
-    + 'size: ' + size + 'x' + size;
-
-  for (var i = 0; i < rndMap.length; i++) {
-    var n = rndMap[i];
-
-    if (!n || isNaN(n)) continue;
-
-    var alpha = (n - min) * norm;
-    var coords = NumberToPixel(i, rndMap.length);
-
-    draw2d.fillStyle = 'rgba(0, 0, 0, ' + alpha + ')'
-    draw2d.fillRect(coords.x, coords.y, 1, 1);
-  }
 }
 
 function UpdateCanvasSize(count) {
