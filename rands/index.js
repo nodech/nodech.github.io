@@ -91,51 +91,7 @@ var SOURCES = {
 };
 
 var DRAW_METHODS = {
-  'moreblack' : function (data) {
-    var rndMap = Array(MAX-MIN);
-
-    UpdateCanvasSize(MAX-MIN);
-
-    var min = MAX;
-    var max = MIN;
-
-    for (var i = 0; i < data.count; i++) {
-      var n = data.data[i];
-      var old = rndMap[n - MIN] || 0;
-
-      rndMap[n - MIN] = old + 1;
-      max = Math.max(old + 1, max);
-      min = Math.min(old + 1, min);
-    }
-
-    min = min -1;
-
-    var canvas = select('canvas');
-    var draw2d = canvas.getContext('2d');
-    var norm   = 1 / (max - min);
-    var size   = csize(rndMap.length);
-
-    var scaleX = WIDTH / size;
-    var scaleY = HEIGHT / size;
-
-    draw2d.scale(scaleX, scaleY);
-
-    gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
-      + 'scale: ' + scaleX + 'x' + scaleY + ', '
-      + 'size: ' + size + 'x' + size;
-
-    for (var i = 0; i < rndMap.length; i++) {
-      var n = rndMap[i];
-
-      if (!n || isNaN(n)) continue;
-
-      var alpha = (n - min) * norm;
-      var coords = NumberToPixel(i, rndMap.length);
-
-      draw2d.fillStyle = 'rgba(0, 0, 0, ' + alpha + ')'
-      draw2d.fillRect(coords.x, coords.y, 1, 1);
-    }
-  }
+  'moreblack' : MoreBlack,
 };
 
 gid('rand-update').onclick = function () {
@@ -188,7 +144,59 @@ function UpdateRandoms() {
   draw(data);
 }
 
-function UpdateCanvasSize(count) {
+
+//DRAW MECHANISMS
+function MoreBlack(data) {
+  var rndMap = Array(MAX-MIN);
+
+  updateCanvasSize(MAX-MIN);
+
+  var min = MAX;
+  var max = MIN;
+
+  for (var i = 0; i < data.count; i++) {
+    var n = data.data[i];
+    var old = rndMap[n - MIN] || 0;
+
+    rndMap[n - MIN] = old + 1;
+    max = Math.max(old + 1, max);
+    min = Math.min(old + 1, min);
+  }
+
+  min = min -1;
+
+  var canvas = select('canvas');
+  var draw2d = canvas.getContext('2d');
+  var norm   = 1 / (max - min);
+  var size   = csize(rndMap.length);
+
+  var scaleX = WIDTH / size;
+  var scaleY = HEIGHT / size;
+
+  draw2d.scale(scaleX, scaleY);
+
+  gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
+    + 'scale: ' + scaleX + 'x' + scaleY + ', '
+    + 'size: ' + size + 'x' + size;
+
+  for (var i = 0; i < rndMap.length; i++) {
+    var n = rndMap[i];
+
+    if (!n || isNaN(n)) continue;
+
+    var alpha = (n - min) * norm;
+    var coords = numberToPixel(i, rndMap.length);
+
+    draw2d.fillStyle = 'rgba(0, 0, 0, ' + alpha + ')'
+    draw2d.fillRect(coords.x, coords.y, 1, 1);
+  }
+}
+
+function DifferentColors(data) {
+}
+
+//helpers
+function updateCanvasSize(count) {
   var canvas = select('canvas');
   var ctx = canvas.getContext('2d');
   var size = csize(count);
@@ -200,7 +208,7 @@ function UpdateCanvasSize(count) {
   ctx.fillRect(0, 0, size, size + 1);
 }
 
-function NumberToPixel(number, count) {
+function numberToPixel(number, count) {
   var size = csize(count);
   var y    = Math.floor(number / size);
   var x    = number - (size * y);
