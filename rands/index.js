@@ -130,6 +130,21 @@ function UpdateRandoms() {
     return;
   }
 
+  var wh = parseInt(gid('vertex').value, 10);
+
+  if (isNaN(wh)) {
+    alert('Vertex isn\'t a number');
+    return;
+  }
+
+  if (wh < 0) {
+    alert('Vertex is less then zero');
+    return;
+  }
+
+  WIDTH  = wh;
+  HEIGHT = wh;
+
   var data = SOURCES[DATA_SOURCE]();
 
   if (!data) {
@@ -230,8 +245,8 @@ function updateCanvasSize(count) {
   var ctx = canvas.getContext('2d');
   var size = csize(count);
 
-  canvas.setAttribute('width', 500);
-  canvas.setAttribute('height', 500);
+  canvas.setAttribute('width', WIDTH);
+  canvas.setAttribute('height', HEIGHT);
 
   ctx.fillStyle = BACKGROUND_COLOR;
   ctx.fillRect(0, 0, size, size + 1);
