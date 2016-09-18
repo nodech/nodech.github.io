@@ -197,7 +197,7 @@ function MoreBlack(data) {
   ctx.scale(scaleX, scaleY);
 
   gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
-    + 'scale: ' + scaleX + 'x' + scaleY + ', '
+    + 'scale: ' + scaleX.toFixed(2) + 'x' + scaleY.toFixed(2) + ', '
     + 'size: ' + size + 'x' + size + ', '
     + 'min/max times scale: ' + min + '/' + max + ', '
     + 'max number range:' + (WIDTH * HEIGHT);
@@ -230,7 +230,7 @@ function DifferentColors(DATA) {
   ctx.scale(scaleX, scaleY);
 
   gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
-    + 'scale: ' + scaleX + 'x' + scaleY + ', '
+    + 'scale: ' + scaleX.toFixed(2) + 'x' + scaleY.toFixed(2) + ', '
     + 'size: ' + size + 'x' + size
     + 'max numbers: ' + (WIDTH * HEIGHT);
 
