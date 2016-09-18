@@ -169,19 +169,23 @@ function MoreBlack(data) {
 
   updateCanvasSize(MAX-MIN);
 
-  var min = MAX;
-  var max = MIN;
-
   for (var i = 0; i < data.count; i++) {
     var n = data.data[i];
     var old = rndMap[n - MIN] || 0;
 
     rndMap[n - MIN] = old + 1;
-    max = Math.max(old + 1, max);
-    min = Math.min(old + 1, min);
   }
 
-  min = min -1;
+  var min = rndMap[0] || 0;
+  var max = rndMap[0] || 0;
+  for (var i = 0; i < rndMap.length; i++) {
+    if (rndMap[i] == undefined) {
+      rndMap[i] = 0;
+    }
+
+    min = Math.min(min, rndMap[i])
+    max = Math.max(max, rndMap[i])
+  }
 
   var ctx = getCtx()
   var norm   = 1 / (max - min);
