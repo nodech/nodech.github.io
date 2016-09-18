@@ -199,6 +199,7 @@ function MoreBlack(data) {
   gid('canvas-size').innerHTML = 'canvas: ' + WIDTH + 'x' + HEIGHT + ', '
     + 'scale: ' + scaleX + 'x' + scaleY + ', '
     + 'size: ' + size + 'x' + size + ', '
+    + 'min/max times scale: ' + min + '/' + max + ', '
     + 'max number range:' + (WIDTH * HEIGHT);
 
   for (var i = 0; i < rndMap.length; i++) {
