@@ -11,8 +11,8 @@ I love new technologies and try to always expand the horizon.
 I like distributed systems, microservices, Blockchain, realtime applications and I'm always eager to learn more stuff.
 
 ## History Summary
- I started with web development and worked on that area for 5 years, worked both with front-end and back-ends of the web apps.
- Last 2 years I'm more interested in backend systems, API's, planning architectures for scaling and more..
+ I started with web development and worked on that area for 6 years, worked both with front-end and back-ends of the web apps.
+ Last 3 years I'm more interested in backend systems, API's, planning architectures for scaling and more..
 
 # Skills
 ### Languages
