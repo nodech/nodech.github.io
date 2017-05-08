@@ -47,7 +47,6 @@ I like distributed systems, microservices, Blockchain, realtime applications and
 ## Cloud Architect (Remote) @ Securifi - 2015 February - 2016 August
   I've been working on the cloud at the Securifi Company. I was in charge of scaling, optimising code, 
   also worked on internal tools and libraries. Most of the job was done in Golang and Nodejs.
-
 ## Node.js Developer (Remote) - 2014 August - October
   Create basic application structure for test app.
 ## Node.js Developer  (Remote) - 2014 June - September
