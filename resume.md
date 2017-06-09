@@ -44,6 +44,12 @@ I like distributed systems, microservices, Blockchain, realtime applications and
   Tbilisi State University, Tbilisi, Georgia  
 
 # Employment History
+## Blockchain Development @ ConsiderItDone - 2017 February - 2017 
+ - Tendermint - ABCI Application Testing tools
+ - Ethermint - Integrate testing tools, project development
+## Blockchain Development/Research @ Evablockchain - 2016 August - 2017 April
+ * Medical Records - Privacy, Identity
+ * Capital Markets - Smart Contracts, Exchanges
 ## Cloud Architect (Remote) @ Securifi - 2015 February - 2016 August
   I've been working on the cloud at the Securifi Company. I was in charge of scaling, optimising code, 
   also worked on internal tools and libraries. Most of the job was done in Golang and Nodejs.
