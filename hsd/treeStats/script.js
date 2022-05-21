@@ -7,9 +7,20 @@ const redraw = document.getElementById('redraw');
 const statNames = [
   'height', 'processingTime', 'growthSize', 'compactedSize', 'compactionTime'
 ];
+
 const elements = {};
+const togglers = {};
+const enabled = new Map();
+
 for (const id of statNames) {
   elements[id] = document.getElementById(id);
+  togglers[id] = document.getElementById(id + 'Toggle');
+  enabled.set(id, true);
+
+  togglers[id].onchange = (e) => {
+    enabled.set(id, e.target.checked);
+    drawGraph();
+  };
 }
 
 let json = null;
@@ -47,6 +58,18 @@ function parsePair(value, del, err) {
   return [width, height];
 }
 
+function getStats(list, prop) {
+  const sorted = list.slice().sort((a, b) => {
+    return a[prop] - b[prop]
+  });
+
+  return {
+    min: sorted[0][prop],
+    med: sorted[sorted.length / 2 | 0][prop],
+    max: sorted[sorted.length - 1][prop]
+  };
+}
+
 function drawGraph() {
   document.getElementById('viz').innerHTML = '';
 
@@ -56,12 +79,19 @@ function drawGraph() {
   if (from > to || from < 0 || to < 0)
     throw new Error('Wrong FROM-TO');
 
-  let {stats, data} = json;
+  let {data} = json;
   data = data.filter(d => d.height >= from && d.height <= to);
 
+  const stats = {
+    height: getStats(data, 'height'),
+    compactedSize: getStats(data, 'compactedSize'),
+    compactionTime: getStats(data, 'compactionTime'),
+    growthSize: getStats(data, 'growthSize'),
+    processingTime: getStats(data, 'processingTime')
+  };
 
   // set the dimensions and margins of the graph
-  const margin = {top: 10, right: 60, bottom: 30, left: 60};
+  const margin = {top: 10, right: 80, bottom: 30, left: 60};
   const width = wcfg - margin.left - margin.right;
   const height = hcfg - margin.top - margin.bottom;
 
@@ -83,68 +113,104 @@ function drawGraph() {
     .attr('transform', 'translate(0,' + height + ')')
     .call(d3.axisBottom(heightX));
 
+  let minSize = 1e9, maxSize = 0;
+
+  if (enabled.get('growthSize')) {
+    minSize = Math.min(minSize, stats.growthSize.min);
+    maxSize = Math.max(maxSize, stats.growthSize.max);
+  }
+
+  if (enabled.get('compactedSize')) {
+    minSize = Math.min(minSize, stats.compactedSize.min);
+    maxSize = Math.max(maxSize, stats.compactedSize.max);
+  }
+
   // Left Y Axes - DISK SPACE
   const diskSizeLY = d3.scaleLinear()
-    .domain([stats.growthSize.min, stats.growthSize.max])
+    .domain([minSize, maxSize])
     .range([ height, 0 ]);
 
   svg.append('g')
     .call(d3.axisLeft(diskSizeLY).tickFormat(formatSize));
 
+
+  let minTime = 1e9, maxTime = 0;
+
+  if (enabled.get('processingTime')) {
+    minTime = Math.min(minTime, stats.processingTime.min);
+    maxTime = Math.max(maxTime, stats.processingTime.max);
+  }
+
+  if (enabled.get('compactionTime')) {
+    minTime = Math.min(minTime, stats.compactionTime.min);
+    maxTime = Math.max(maxTime, stats.compactionTime.max);
+  }
   // RIGHT Y Axes - TIME TAKEN
   const processTimeRY = d3.scaleLinear()
-    .domain([stats.processingTime.min, stats.compactionTime.max])
-    .range([ height, 0 ]);
+    .domain([minTime, maxTime])
+    .range([height, 0]);
 
   svg.append('g')
     .attr('transform', `translate(${width}, 0)`)
     .call(d3.axisRight(processTimeRY).tickFormat(formatTime))
 
-  svg
-    .append('path')
-    .datum(data)
-    .attr('fill', 'none')
-    .attr('stroke', '#e87b06')
-    .attr('stroke-width', 0.5)
-    .attr('d', d3.line()
-      .x(d => heightX(d.height))
-      .y(d => processTimeRY(d.compactionTime))
-    )
+  // Now draw other stuff...
 
-  svg
-    .append('path')
-    .datum(data)
-    .attr('fill', 'none')
-    .attr('stroke', '#e80a06')
-    .attr('stroke-width', 0.5)
-    .attr('d', d3.line()
-      .x(d => heightX(d.height))
-      .y(d => processTimeRY(d.processingTime))
-    )
+  if (enabled.get('compactionTime')) {
+    // Draw Compaction time
+    svg
+      .append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', '#e87b06')
+      .attr('stroke-width', 0.5)
+      .attr('d', d3.line()
+        .x(d => heightX(d.height))
+        .y(d => processTimeRY(d.compactionTime))
+      )
+  }
 
-  // Add SIZE LINE
-  svg
-    .append('path')
-    .datum(data)
-    .attr('fill', 'none')
-    .attr('stroke', '#063be8')
-    .attr('stroke-width', 1.0)
-    .attr('d', d3.line()
-      .x(d => heightX(d.height))
-      .y(d => diskSizeLY(d.growthSize))
-    )
+  if (enabled.get('processingTime')) {
+    // Draw processing time
+    svg
+      .append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', '#e80a06')
+      .attr('stroke-width', 0.5)
+      .attr('d', d3.line()
+        .x(d => heightX(d.height))
+        .y(d => processTimeRY(d.processingTime))
+      )
+  }
 
-  // Add Compacted Size Line
-  svg
-    .append('path')
-    .datum(data)
-    .attr('fill', 'none')
-    .attr('stroke', '#24b719')
-    .attr('stroke-width', 1.0)
-    .attr('d', d3.line()
-      .x(d => heightX(d.height))
-      .y(d => diskSizeLY(d.compactedSize))
-    )
+  if (enabled.get('growthSize')) {
+    // Add SIZE LINE
+    svg
+      .append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', '#063be8')
+      .attr('stroke-width', 1.0)
+      .attr('d', d3.line()
+        .x(d => heightX(d.height))
+        .y(d => diskSizeLY(d.growthSize))
+      )
+  }
+
+  if (enabled.get('compactedSize')) {
+    // Add Compacted Size Line
+    svg
+      .append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', '#24b719')
+      .attr('stroke-width', 1.0)
+      .attr('d', d3.line()
+        .x(d => heightX(d.height))
+        .y(d => diskSizeLY(d.compactedSize))
+      )
+  }
 
   // Create a rect on top of the svg area: this rectangle recovers mouse position
   svg
@@ -204,9 +270,9 @@ function formatTime(ms) {
     const seconds = ms / 1e3;
 
     if (seconds > 60)
-      return (seconds / 60).toFixed(3) + ' min';
+      return (seconds / 60).toFixed(2) + ' min';
 
-    return (ms / 1e3).toFixed(3) + ' sec';
+    return (ms / 1e3).toFixed(2) + ' sec';
   }
 
   return ms.toFixed(2) + ' ms';

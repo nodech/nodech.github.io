@@ -8,7 +8,7 @@
   <body>
     <style>
       body {
-        font-size: 11px;
+        font-size: 12px;
       }
 
       .huh {
@@ -20,6 +20,13 @@
       .huh > div {
         display: inline-block;
         padding: 5px;
+        line-height: 20px;
+      }
+
+      .huh input[type="checkbox"] {
+        padding: 0px;
+        margin: 0px;
+        margin-right: 5px;
       }
 
       .huh .circle {
@@ -37,13 +44,13 @@
     </div>
     <div class="huh" style="display: flex">
       <div>
-        <div class="circle" style=""></div> Block Height <br />
-        <div class="circle" style="background-color: #e80a06"></div> Processing Time <br />
-        <div class="circle" style="background-color: #063be8"></div> Tree Growth<br />
-        <div class="circle" style="background-color: #24b719"></"></div> Compacted Tree<br />
-        <div class="circle" style="background-color: #e87b06"></div> Compaction Time <br />
+        <input type="checkbox" id="heightToggle" style="visibility: hidden"/><div class="circle" style=""></div> Block Height <br />
+        <input type="checkbox" id="processingTimeToggle" checked="checked"/><div class="circle" style="background-color: #e80a06"></div> Processing Time <br />
+        <input type="checkbox" id="growthSizeToggle" checked="checked"/><div class="circle" style="background-color: #063be8"></div> Tree Size<br />
+        <input type="checkbox" id="compactedSizeToggle" checked="checked"/><div class="circle" style="background-color: #24b719"></"></div> Compacted Tree<br />
+        <input type="checkbox" id="compactionTimeToggle" checked="checked"/><div class="circle" style="background-color: #e87b06"></div> Compaction Time <br />
       </div>
-      <div style="width: 200px">
+      <div>
         <div id="height">0</div>
         <div id="processingTime">0 ms</div>
         <div id="growthSize">0 B</div>
