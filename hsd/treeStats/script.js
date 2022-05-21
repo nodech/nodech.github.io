@@ -4,22 +4,30 @@ const size = document.getElementById('size');
 const range = document.getElementById('range');
 const redraw = document.getElementById('redraw');
 
+const statNames = [
+  'height', 'processingTime', 'growthSize', 'compactedSize', 'compactionTime'
+];
+const elements = {};
+for (const id of statNames) {
+  elements[id] = document.getElementById(id);
+}
+
 let json = null;
 
 redraw.onclick = () => {
   if (json)
-    drawGraph(json);
+    drawGraph();
 };
 
 (async () => {
-  const res = await fetch('./tree-sync.json');
+  const res = await fetch('./tree-data.json');
 
   if (!res.ok)
     throw new Error('Response not ok.');
 
   json = await res.json();
 
-  drawGraph(json);
+  drawGraph();
 })().catch((e) => {
   console.error(e);
 });
@@ -39,7 +47,7 @@ function parsePair(value, del, err) {
   return [width, height];
 }
 
-function drawGraph(info) {
+function drawGraph() {
   document.getElementById('viz').innerHTML = '';
 
   const [wcfg, hcfg] = parsePair(size.value, 'x', 'Wrong WIDTHxHEIGHT');
@@ -48,29 +56,9 @@ function drawGraph(info) {
   if (from > to || from < 0 || to < 0)
     throw new Error('Wrong FROM-TO');
 
-  let {data} = json;
+  let {stats, data} = json;
   data = data.filter(d => d.height >= from && d.height <= to);
 
-  const timeSorted = json.data.slice().sort((a, b) => a.ms > b.ms);
-  const spaceSorted = json.data.slice().sort((a, b) => a.space > b.space);
-
-  const stats = {
-    height: {
-      min: data[0].height,
-      med: data[data.length / 2 | 0].height,
-      max: data[data.length - 1].height
-    },
-    space: {
-      min: spaceSorted[0].space,
-      med: spaceSorted[spaceSorted.length / 2 | 0].space,
-      max: spaceSorted[spaceSorted.length - 1].space
-    },
-    time: {
-      min: timeSorted[0].ms,
-      med: timeSorted[timeSorted.length / 2 | 0].ms,
-      max: timeSorted[timeSorted.length - 1].ms
-    }
-  };
 
   // set the dimensions and margins of the graph
   const margin = {top: 10, right: 60, bottom: 30, left: 60};
@@ -87,53 +75,75 @@ function drawGraph(info) {
             'translate(' + margin.left + ',' + margin.top + ')');
 
   // X axes we have height
-  const x = d3.scaleLinear()
+  const heightX = d3.scaleLinear()
     .domain([stats.height.min, stats.height.max])
     .range([ 0, width ])
 
   svg.append('g')
     .attr('transform', 'translate(0,' + height + ')')
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(heightX));
 
   // Left Y Axes - DISK SPACE
-  const y = d3.scaleLinear()
-    .domain([stats.space.min, stats.space.max])
+  const diskSizeLY = d3.scaleLinear()
+    .domain([stats.growthSize.min, stats.growthSize.max])
     .range([ height, 0 ]);
 
   svg.append('g')
-    .call(d3.axisLeft(y).tickFormat(formatSize));
+    .call(d3.axisLeft(diskSizeLY).tickFormat(formatSize));
 
   // RIGHT Y Axes - TIME TAKEN
-  const y2 = d3.scaleLinear()
-    .domain([stats.time.min, stats.time.max])
+  const processTimeRY = d3.scaleLinear()
+    .domain([stats.processingTime.min, stats.compactionTime.max])
     .range([ height, 0 ]);
 
   svg.append('g')
     .attr('transform', `translate(${width}, 0)`)
-    .attr('stroke', '#330000')
-    .call(d3.axisRight(y2).tickFormat(formatTime))
+    .call(d3.axisRight(processTimeRY).tickFormat(formatTime))
 
   svg
     .append('path')
     .datum(data)
     .attr('fill', 'none')
-    .attr('stroke', 'red')
+    .attr('stroke', '#e87b06')
     .attr('stroke-width', 0.5)
     .attr('d', d3.line()
-      .x(d => x(d.height))
-      .y(d => y2(d.ms))
+      .x(d => heightX(d.height))
+      .y(d => processTimeRY(d.compactionTime))
     )
 
-  // Add the line
   svg
     .append('path')
     .datum(data)
     .attr('fill', 'none')
-    .attr('stroke', 'steelblue')
+    .attr('stroke', '#e80a06')
+    .attr('stroke-width', 0.5)
+    .attr('d', d3.line()
+      .x(d => heightX(d.height))
+      .y(d => processTimeRY(d.processingTime))
+    )
+
+  // Add SIZE LINE
+  svg
+    .append('path')
+    .datum(data)
+    .attr('fill', 'none')
+    .attr('stroke', '#063be8')
     .attr('stroke-width', 1.5)
     .attr('d', d3.line()
-      .x(d => x(d.height))
-      .y(d => y(d.space))
+      .x(d => heightX(d.height))
+      .y(d => diskSizeLY(d.growthSize))
+    )
+
+  // Add Compacted Size Line
+  svg
+    .append('path')
+    .datum(data)
+    .attr('fill', 'none')
+    .attr('stroke', '#4206e8')
+    .attr('stroke-width', 1.5)
+    .attr('d', d3.line()
+      .x(d => heightX(d.height))
+      .y(d => diskSizeLY(d.compactedSize))
     )
 
   // Create a rect on top of the svg area: this rectangle recovers mouse position
@@ -156,31 +166,23 @@ function drawGraph(info) {
       .style('fill', 'none')
       .attr('stroke', 'black');
 
-  // Create the text that travels along the curve of chart
-  var focusText = svg
-    .append('g')
-    .append('text')
-      .attr('text-anchor', 'left')
-      .attr('alignment-baseline', 'middle')
-      .attr('x', margin.left + 20)
-      .attr('y', margin.top + 20);
-
   function mousemove() {
     // recover coordinate we need
-    const x0 = x.invert(d3.mouse(this)[0]);
+    const x0 = heightX.invert(d3.mouse(this)[0]);
     const i = bisect(data, x0, 1);
     const cur = data[i];
 
     focus
-      .attr('x1', x(cur.height))
+      .attr('x1', heightX(cur.height))
       .attr('y1', 0)
-      .attr('x2', x(cur.height))
+      .attr('x2', heightX(cur.height))
       .attr('y2', height);
 
-    focusText
-      .html(
-        `height: ${cur.height}, space: ${formatSize(cur.space)}, time: ${formatTime(cur.ms)}`
-      );
+    elements['height'].innerHTML = cur.height;
+    elements['processingTime'].innerHTML = formatTime(cur.processingTime);
+    elements['growthSize'].innerHTML = formatSize(cur.growthSize);
+    elements['compactedSize'].innerHTML = formatSize(cur.compactedSize);
+    elements['compactionTime'].innerHTML = formatTime(cur.compactionTime);
   }
 }
 
@@ -198,8 +200,14 @@ function formatSize(size) {
 }
 
 function formatTime(ms) {
-  if (ms >= 1e3)
-    return (ms / 1e3).toFixed(3) + ' s';
+  if (ms >= 1e3) {
+    const seconds = ms / 1e3;
+
+    if (seconds > 60)
+      return (seconds / 60).toFixed(3) + ' min';
+
+    return (ms / 1e3).toFixed(3) + ' sec';
+  }
 
   return ms.toFixed(2) + ' ms';
 }

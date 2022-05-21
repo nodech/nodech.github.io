@@ -10,13 +10,46 @@
       body {
         font-size: 11px;
       }
+
+      .huh {
+        display: flex;
+        padding-top: 10px;
+        padding-left: 40px;
+      }
+
+      .huh > div {
+        display: inline-block;
+        padding: 5px;
+      }
+
+      .huh .circle {
+        display: inline-block;
+        border-radius: 5.5px;
+        width: 11px;
+        height: 11px;
+      }
     </style>
     <h3>NOTE: Some entries in the data are incorrect. E.g. flat lines in GB is data error.</h3>
     <div>
       graph size: <input type="text" id="size" value="1060x500" placeholder="WIDTHxHEIGHT" />
       data range: <input type="text" id="range" value="0-120589" placeholder="FROM-TO" />
       <button id="redraw">Redraw</button>
-
+    </div>
+    <div class="huh" style="display: flex">
+      <div>
+        <div class="circle" style=""></div> Block Height <br />
+        <div class="circle" style="background-color: #e80a06"></div> Processing Time <br />
+        <div class="circle" style="background-color: #063be8"></div> Tree Growth<br />
+        <div class="circle" style="background-color: #4206e8"></"></div> Compacted Tree<br />
+        <div class="circle" style="background-color: #e87b06"></div> Compaction Time <br />
+      </div>
+      <div style="width: 200px">
+        <div id="height">0</div>
+        <div id="processingTime">0 ms</div>
+        <div id="growthSize">0 B</div>
+        <div id="compactedSize">0 B</div>
+        <div id="compactionTime">0 ms</div>
+      </div>
     </div>
     <div id="viz"></div>
     <script src="https://d3js.org/d3.v4.js"></script>
