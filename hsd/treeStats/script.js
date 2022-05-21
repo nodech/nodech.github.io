@@ -15,7 +15,7 @@ const enabled = new Map();
 for (const id of statNames) {
   elements[id] = document.getElementById(id);
   togglers[id] = document.getElementById(id + 'Toggle');
-  enabled.set(id, true);
+  enabled.set(id, togglers[id].checked);
 
   togglers[id].onchange = (e) => {
     enabled.set(id, e.target.checked);
@@ -91,7 +91,7 @@ function drawGraph() {
   };
 
   // set the dimensions and margins of the graph
-  const margin = {top: 10, right: 80, bottom: 30, left: 60};
+  const margin = {top: 10, right: 100, bottom: 30, left: 100};
   const width = wcfg - margin.left - margin.right;
   const height = hcfg - margin.top - margin.bottom;
 
@@ -113,7 +113,7 @@ function drawGraph() {
     .attr('transform', 'translate(0,' + height + ')')
     .call(d3.axisBottom(heightX));
 
-  let minSize = 1e9, maxSize = 0;
+  let minSize = Number.POSITIVE_INFINITY, maxSize = 0;
 
   if (enabled.get('growthSize')) {
     minSize = Math.min(minSize, stats.growthSize.min);
@@ -134,7 +134,7 @@ function drawGraph() {
     .call(d3.axisLeft(diskSizeLY).tickFormat(formatSize));
 
 
-  let minTime = 1e9, maxTime = 0;
+  let minTime = Number.POSITIVE_INFINITY, maxTime = 0;
 
   if (enabled.get('processingTime')) {
     minTime = Math.min(minTime, stats.processingTime.min);
