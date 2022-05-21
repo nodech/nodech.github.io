@@ -1,34 +1,161 @@
 'use strict';
 
-const size = document.getElementById('size');
-const range = document.getElementById('range');
-const redraw = document.getElementById('redraw');
+class GraphParams {
+  constructor() {
+    this._graphSize = [1060, 500];
+    this._range = [0, 120589];
+    this.height = true;
+    this.processingTime = true;
+    this.growthSize = true;
+    this.deltaGrowthSize = true;
+    this.compactedSize = true;
+    this.deltaCompactedSize = true;
+    this.compactionTime = true;
+  }
 
-const statNames = [
-  'height', 'processingTime', 'growthSize', 'compactedSize', 'compactionTime'
-];
+  get graphSize() {
+    return this._graphSize[0] + 'x' + this._graphSize[1];
+  }
 
-const elements = {};
-const togglers = {};
-const enabled = new Map();
+  set graphSize(value) {
+    try {
+      this._graphSize = parsePair(value, 'x', 'Wrong WIDTHxHEIGHT');
+    } catch (e) {
+      alert(e.message);
+    }
+  }
 
-for (const id of statNames) {
-  elements[id] = document.getElementById(id);
-  togglers[id] = document.getElementById(id + 'Toggle');
-  enabled.set(id, togglers[id].checked);
+  get range() {
+    return this._range[0] + '-' + this._range[1];
+  }
 
-  togglers[id].onchange = (e) => {
-    enabled.set(id, e.target.checked);
+
+  set range(value) {
+    try {
+      this._range = parsePair(value, '-', 'Wrong FROM-TO');
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  get graphSizePair() {
+    return this._graphSize;
+  }
+
+  get rangePair() {
+    return this._range;
+  }
+
+  createUSP() {
+    const usp = new URLSearchParams();
+
+    const setUSP = (name) => {
+      if (!this[name])
+        usp.set(name, 0)
+    };
+
+    usp.set('graphSize', this.graphSize);
+    usp.set('range', this.range);
+
+    setUSP('processingTime');
+    setUSP('growthSize');
+    setUSP('deltaGrowthSize');
+    setUSP('compactedSize');
+    setUSP('deltaCompactedSize');
+    setUSP('compactionTime');
+
+    return usp;
+  }
+
+  checkHash() {
+    if (!window.location.hash)
+      return;
+
+    const usp = new URLSearchParams(window.location.hash.substr(1));
+    const setLocal = (name) => {
+      if (usp.get(name) != null)
+        this[name] = usp.get(name);
+    };
+
+    const setLocalBool = (name) => {
+      if (usp.get(name) != null)
+        this[name] = usp.get(name) === '0' ? false : true;
+    };
+
+    setLocal('graphSize');
+    setLocal('range');
+
+    setLocalBool('processingTime');
+    setLocalBool('growthSize');
+    setLocalBool('deltaGrowthSize');
+    setLocalBool('compactedSize');
+    setLocalBool('deltaCompactedSize');
+    setLocalBool('compactionTime');
+  }
+
+  updateHash() {
+    window.location.hash = this.createUSP().toString();
+  }
+
+  update() {
+    this.updateHash();
+    drawGraph();
+  }
+}
+
+function setupControls() {
+  const statNames = [
+    'height', 'processingTime', 'growthSize', 'deltaGrowthSize', 'compactedSize', 'deltaCompactedSize', 'compactionTime'
+  ];
+  const togglers = {};
+
+  const size = document.getElementById('size');
+  const range = document.getElementById('range');
+  const redraw = document.getElementById('redraw');
+
+  const updateElements = () => {
+    size.value = graphParams.graphSize;
+    range.value = graphParams.range;
+
+    for (const id of statNames) {
+      togglers[id].checked = graphParams[id];
+    }
+  };
+
+  for (const id of statNames) {
+    elements[id] = document.getElementById(id);
+    togglers[id] = document.getElementById(id + 'Toggle');
+  }
+
+  updateElements();
+
+  for (const id of statNames) {
+    togglers[id].onchange = (e) => {
+      graphParams[id] = e.target.checked;
+      graphParams.updateHash();
+      drawGraph();
+    };
+  }
+
+  redraw.onclick = () => {
+    graphParams.graphSize = size.value;
+    graphParams.range = range.value;
+    graphParams.update();
+  };
+
+  window.onhashchange = () => {
+    graphParams.checkHash();
+    updateElements();
     drawGraph();
   };
 }
 
 let json = null;
+const graphParams = new GraphParams();
+graphParams.checkHash();
+const elements = {};
 
-redraw.onclick = () => {
-  if (json)
-    drawGraph();
-};
+setupControls();
 
 (async () => {
   const res = await fetch('./tree-data.json');
@@ -43,51 +170,39 @@ redraw.onclick = () => {
   console.error(e);
 });
 
-function parsePair(value, del, err) {
-  const [w, h] = value.split(del);
-
-  if (!w || !h)
-    throw new Error(err);
-
-  let width = parseInt(w);
-  let height = parseInt(h);
-
-  if (Number.isNaN(width) || Number.isNaN(height))
-    throw new Error(err);
-
-  return [width, height];
-}
-
-function getStats(list, prop) {
-  const sorted = list.slice().sort((a, b) => {
-    return a[prop] - b[prop]
-  });
-
-  return {
-    min: sorted[0][prop],
-    med: sorted[sorted.length / 2 | 0][prop],
-    max: sorted[sorted.length - 1][prop]
-  };
-}
-
 function drawGraph() {
+  if (!json)
+    return;
+
   document.getElementById('viz').innerHTML = '';
 
-  const [wcfg, hcfg] = parsePair(size.value, 'x', 'Wrong WIDTHxHEIGHT');
-  const [from, to] = parsePair(range.value, '-', 'Wrong FROM-TO');
-
-  if (from > to || from < 0 || to < 0)
-    throw new Error('Wrong FROM-TO');
+  const [wcfg, hcfg] = graphParams.graphSizePair;
+  const [from, to] = graphParams.rangePair;
 
   let {data} = json;
   data = data.filter(d => d.height >= from && d.height <= to);
+
+  // calculate deltas
+  data = data.map((d, i, arr) => {
+    d.deltaGrowthSize = 0;
+    d.deltaCompactedSize = 0;
+
+    if (i === 0)
+      return d;
+
+    d.deltaGrowthSize = d.growthSize - arr[i - 1].growthSize;
+    d.deltaCompactedSize = d.compactedSize - arr[i - 1].compactedSize;
+    return d;
+  });
 
   const stats = {
     height: getStats(data, 'height'),
     compactedSize: getStats(data, 'compactedSize'),
     compactionTime: getStats(data, 'compactionTime'),
     growthSize: getStats(data, 'growthSize'),
-    processingTime: getStats(data, 'processingTime')
+    processingTime: getStats(data, 'processingTime'),
+    deltaGrowthSize: getStats(data, 'deltaGrowthSize'),
+    deltaCompactedSize: getStats(data, 'deltaCompactedSize')
   };
 
   // set the dimensions and margins of the graph
@@ -115,14 +230,24 @@ function drawGraph() {
 
   let minSize = Number.POSITIVE_INFINITY, maxSize = 0;
 
-  if (enabled.get('growthSize')) {
+  if (graphParams.growthSize) {
     minSize = Math.min(minSize, stats.growthSize.min);
     maxSize = Math.max(maxSize, stats.growthSize.max);
   }
 
-  if (enabled.get('compactedSize')) {
+  if (graphParams.compactedSize) {
     minSize = Math.min(minSize, stats.compactedSize.min);
     maxSize = Math.max(maxSize, stats.compactedSize.max);
+  }
+
+  if (graphParams.deltaGrowthSize) {
+    minSize = Math.min(minSize, stats.deltaGrowthSize.min);
+    maxSize = Math.max(maxSize, stats.deltaGrowthSize.max);
+  }
+
+  if (graphParams.deltaCompactedSize) {
+    minSize = Math.min(minSize, stats.deltaCompactedSize.min);
+    maxSize = Math.max(maxSize, stats.deltaCompactedSize.max);
   }
 
   // Left Y Axes - DISK SPACE
@@ -136,12 +261,12 @@ function drawGraph() {
 
   let minTime = Number.POSITIVE_INFINITY, maxTime = 0;
 
-  if (enabled.get('processingTime')) {
+  if (graphParams.processingTime) {
     minTime = Math.min(minTime, stats.processingTime.min);
     maxTime = Math.max(maxTime, stats.processingTime.max);
   }
 
-  if (enabled.get('compactionTime')) {
+  if (graphParams.compactionTime) {
     minTime = Math.min(minTime, stats.compactionTime.min);
     maxTime = Math.max(maxTime, stats.compactionTime.max);
   }
@@ -156,7 +281,7 @@ function drawGraph() {
 
   // Now draw other stuff...
 
-  if (enabled.get('compactionTime')) {
+  if (graphParams.compactionTime) {
     // Draw Compaction time
     svg
       .append('path')
@@ -170,7 +295,7 @@ function drawGraph() {
       )
   }
 
-  if (enabled.get('processingTime')) {
+  if (graphParams.processingTime) {
     // Draw processing time
     svg
       .append('path')
@@ -184,7 +309,7 @@ function drawGraph() {
       )
   }
 
-  if (enabled.get('growthSize')) {
+  if (graphParams.growthSize) {
     // Add SIZE LINE
     svg
       .append('path')
@@ -198,7 +323,20 @@ function drawGraph() {
       )
   }
 
-  if (enabled.get('compactedSize')) {
+  if (graphParams.deltaGrowthSize) {
+    svg
+      .append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', '#993be8')
+      .attr('stroke-width', 1.0)
+      .attr('d', d3.line()
+        .x(d => heightX(d.height))
+        .y(d => diskSizeLY(d.deltaGrowthSize))
+      )
+  }
+
+  if (graphParams.compactedSize) {
     // Add Compacted Size Line
     svg
       .append('path')
@@ -209,6 +347,19 @@ function drawGraph() {
       .attr('d', d3.line()
         .x(d => heightX(d.height))
         .y(d => diskSizeLY(d.compactedSize))
+      )
+  }
+
+  if (graphParams.deltaCompactedSize) {
+    svg
+      .append('path')
+      .datum(data)
+      .attr('fill', 'none')
+      .attr('stroke', '#99b719')
+      .attr('stroke-width', 1.0)
+      .attr('d', d3.line()
+        .x(d => heightX(d.height))
+        .y(d => diskSizeLY(d.deltaCompactedSize))
       )
   }
 
@@ -249,6 +400,8 @@ function drawGraph() {
     elements['growthSize'].innerHTML = formatSize(cur.growthSize);
     elements['compactedSize'].innerHTML = formatSize(cur.compactedSize);
     elements['compactionTime'].innerHTML = formatTime(cur.compactionTime);
+    elements['deltaGrowthSize'].innerHTML = formatSize(cur.deltaGrowthSize);
+    elements['deltaCompactedSize'].innerHTML = formatSize(cur.deltaCompactedSize);
   }
 }
 
@@ -277,3 +430,32 @@ function formatTime(ms) {
 
   return ms.toFixed(2) + ' ms';
 }
+
+function parsePair(value, del, err) {
+  const [w, h] = value.split(del);
+
+  if (!w || !h)
+    throw new Error(err);
+
+  let width = parseInt(w);
+  let height = parseInt(h);
+
+  if (Number.isNaN(width) || Number.isNaN(height))
+    throw new Error(err);
+
+  return [width, height];
+}
+
+function getStats(list, prop) {
+  const sorted = list.slice().sort((a, b) => {
+    return a[prop] - b[prop]
+  });
+
+  return {
+    min: sorted[0][prop],
+    med: sorted[sorted.length / 2 | 0][prop],
+    max: sorted[sorted.length - 1][prop]
+  };
+}
+
+
