@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const rawTreeStats = fs.readFileSync('stats.pc', { encoding: 'ascii' });
+const rawTreeStats = fs.readFileSync('stats.pc2', { encoding: 'ascii' });
 const rawCompactStats = fs.readFileSync('compacted.info', { encoding: 'ascii' });
 
 const treeInterval = 36;
@@ -70,31 +70,11 @@ for (let i = 2341; i < maxHeightInfo; i++) {
     height: i,
     compactedSize: comp.size,
     compactionTime: comp.time,
-    growthSize: tree.size,
+    growthSize: tree.size * 1000,
     processingTime: tree.time
   };
 
   data.push(info);
 }
 
-const stats = {
-  height: getStats(data, 'height'),
-  compactedSize: getStats(data, 'compactedSize'),
-  compactionTime: getStats(data, 'compactionTime'),
-  growthSize: getStats(data, 'growthSize'),
-  processingTime: getStats(data, 'processingTime')
-};
-
-function getStats(list, prop) {
-  const sorted = list.slice().sort((a, b) => {
-    return a[prop] - b[prop]
-  });
-
-  return {
-    min: sorted[0][prop],
-    med: sorted[sorted.length / 2 | 0][prop],
-    max: sorted[sorted.length - 1][prop]
-  };
-}
-
-fs.writeFileSync('tree-data.json', JSON.stringify({stats, data}, null, 2));
+fs.writeFileSync('tree-data.json', JSON.stringify({data}, null, 2));
