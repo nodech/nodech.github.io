@@ -1,3 +1,3 @@
-nodar-chkuaselidze.github.io
+nodech.github.io
 ============================
 
