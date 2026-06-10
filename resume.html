@@ -183,7 +183,9 @@ font-size: 1.6rem;
 </head>
 <body>
 <h1 id="nodari-chkuaselidze">Nodari Chkuaselidze</h1>
-<p><a href="mailto:nodar.chkuaselidze@gmail.com" target="_blank" rel="noopener noreferrer">nodar.chkuaselidze@gmail.com</a> | <a href="https://github.com/nodech" target="_blank" rel="noopener noreferrer">github.com/nodech</a> | <a href="https://www.linkedin.com/in/nodari-chkuaselidze-95a829b1" target="_blank" rel="noopener noreferrer">linkedin.com/in/nodari-chkuaselidze-95a829b1</a></p>
+<p><a href="mailto:nodar.chkuaselidze@gmail.com" target="_blank" rel="noopener noreferrer">nodar.chkuaselidze@gmail.com</a> | <a href="https://github.com/nodech" target="_blank" rel="noopener noreferrer">github.com/nodech</a> | <a href="https://www.linkedin.com/in/nodari-chkuaselidze-95a829b1" target="_blank" rel="noopener noreferrer">linkedin.com/in/nodari-chkuaselidze-95a829b1</a>
+| Tbilisi, Georgia | Remote</p>
+<h2 id="summary">Summary</h2>
 <p>Senior backend and protocol engineer with 15+ years of experience
 building and maintaining production blockchain infrastructure, full
 nodes, wallets, database layers, and native Node.js bindings. Core
@@ -198,42 +200,42 @@ development.</p>
 Developer</h3>
 <p>Sep 2022 - Dec 2025 | Remote</p>
 <ul>
-<li>Core developer for <a href="https://github.com/handshake-org/hsd" target="_blank" rel="noopener noreferrer"><strong><code>hsd</code></strong></a>, the
-<strong>JavaScript/Node.js</strong> full node and wallet for the
-Handshake decentralized naming protocol, used by the Handshake network.
-Released and maintained <strong><code>hsd</code> v5 through v8</strong>,
-owning work across consensus, wallet, migrations, networking,
-dependencies, <strong>soft forks</strong> and release coordination.</li>
-<li>Reworked wallet transaction history, unconfirmed transaction APIs,
+<li>Led <a href="https://github.com/handshake-org/hsd" target="_blank" rel="noopener noreferrer"><strong><code>hsd</code></strong></a>
+full-node and wallet development for the Handshake decentralized naming
+protocol. Released <strong>4 major versions</strong> (<code>v5</code>
+through <code>v8</code>) across consensus, wallet, database migrations,
+peer-to-peer networking, dependencies, <strong>soft forks</strong>, and
+release management.</li>
+<li>Redesigned wallet transaction history, unconfirmed transaction APIs,
 and coin selection around <strong>database-backed indexes</strong>,
-reducing memory-heavy wallet operations by eliminating large in-memory
-history and coin-set loads.</li>
-<li>Fixed wallet correctness and availability issues discovered during
-production upgrades, including DoS vectors, reorg accounting invariants,
-chain-state handling bugs, and auction-state failures that could block
-wallet startup or transaction creation.</li>
-<li>Implemented controlled node and wallet rescans with parallel
-scanning, lifecycle events, and operational controls, eliminating rescan
-deadlocks and improving recovery reliability during production
-maintenance.</li>
+removing full in-memory history and coin-set loads from high-volume
+wallet operations.</li>
+<li>Resolved production wallet failures across DoS, reorg accounting,
+chain-state, and auction-state paths that blocked startup or transaction
+creation.</li>
+<li>Implemented parallel node and wallet rescans with lifecycle events
+and controls, eliminating rescan deadlocks during production
+recovery.</li>
 <li>Led production migration of Namebase’s forked node stack from
 <strong><code>hsd</code> v2 to v8</strong>, preserving custom protocol,
 wallet, and infrastructure behavior while adopting multiple years of
 upstream changes.</li>
-<li>Extended Namebase-specific infrastructure with
-<code>hsd-proxy</code> work in <strong>Go</strong>, adding partial batch
-support, health checks, transaction invalidation behavior, and
-production timeout handling.</li>
-<li>Built <a href="https://github.com/nodech/nurkel" target="_blank" rel="noopener noreferrer"><code>nurkel</code></a>, <strong>Node.js
+<li>Implemented Namebase-specific <code>hsd-proxy</code> enhancements in
+<strong>Go</strong>, adding partial batch support, health checks,
+transaction invalidation, production timeout handling, and OpenTelemetry
+tracing from production services through <code>hsd-proxy</code> into
+<code>hsd</code> with Honeycomb.</li>
+<li>Created <a href="https://github.com/nodech/nurkel" target="_blank" rel="noopener noreferrer"><code>nurkel</code></a>, <strong>Node.js
 C/N-API</strong> bindings for the <strong>C</strong> <a href="https://github.com/chjj/liburkel" target="_blank" rel="noopener noreferrer"><code>liburkel</code></a> library, plus <a href="https://github.com/nodech/liburkel-test" target="_blank" rel="noopener noreferrer"><code>liburkel-test</code></a>, a
-deterministic randomized differential test suite validating
-compatibility across C <code>liburkel</code>, JS <a href="https://github.com/handshake-org/urkel" target="_blank" rel="noopener noreferrer"><code>urkel</code></a>, and
+deterministic randomized differential testing suite validating
+compatibility across <strong>3 implementations</strong>: C
+<code>liburkel</code>, JS <a href="https://github.com/handshake-org/urkel" target="_blank" rel="noopener noreferrer"><code>urkel</code></a>, and
 <code>nurkel</code>.</li>
-<li>Maintained and modernized <a href="https://github.com/bcoin-org/bdb" target="_blank" rel="noopener noreferrer"><strong><code>bdb</code></strong></a>, a
-diverged LevelDOWN fork (LevelDB N-API bindings), fixing native binding
-segfaults and memory leaks, adding async iterator support, improving
-multi-byte/buffer key handling, and strengthening tests, benchmarks, and
-type/lint tooling.</li>
+<li>Modernized <a href="https://github.com/bcoin-org/bdb" target="_blank" rel="noopener noreferrer"><strong><code>bdb</code></strong></a>, a
+diverged LevelDOWN fork (LevelDB N-API bindings), by fixing native
+binding segfaults and memory leaks, adding async iterator support,
+improving multi-byte/buffer key handling, and expanding tests,
+benchmarks, and type/lint tooling.</li>
 <li>Open source work: <a href="https://github.com/search?q=author%3Anodech+org%3Ahandshake-org&amp;type=pullrequests" target="_blank" rel="noopener noreferrer">Handshake pull requests</a>
 and shared <a href="https://github.com/search?q=author%3Anodech+org%3Abcoin-org&amp;type=pullrequests" target="_blank" rel="noopener noreferrer">bcoin ecosystem</a>
 dependencies.</li>
@@ -243,21 +245,20 @@ Developer</h3>
 <p>Jun 2021 - Jun 2022 | Remote</p>
 <ul>
 <li>Maintained <strong><code>hsd</code></strong>, the JavaScript/Node.js
-full node implementation for the Handshake decentralized naming
-protocol, with wallet, mempool, storage, and peer-to-peer networking
-components.</li>
+full node for Handshake, across wallet, mempool, storage, and
+peer-to-peer networking components.</li>
 <li>Designed and implemented the chain and wallet database migration
-system for <strong><code>chaindb</code></strong> and
+framework for <strong><code>chaindb</code></strong> and
 <strong><code>walletdb</code></strong>, including migration flags,
 version tracking, and result reporting.</li>
-<li>Backported the <code>bcoin</code> <strong>FileBlock store</strong>
+<li>Integrated the <code>bcoin</code> <strong>FileBlock store</strong>
 into <code>hsd</code>, moving block data from <strong>LevelDB</strong>
-into append-only flat files with migration and re-index support.</li>
-<li>Defined and documented release process, branching strategy, and
-versioned release notes for a long-lived open source protocol
-implementation.</li>
-<li>Contributed to the final <a href="https://github.com/handshake-org/urkel" target="_blank" rel="noopener noreferrer"><code>urkel</code></a> v1.0.0 release,
-including cleanup and root cache recovery work.</li>
+to append-only flat files with migration and re-index support.</li>
+<li>Defined release process, branching strategy, and versioned release
+notes for a long-lived open source protocol implementation.</li>
+<li>Completed final <a href="https://github.com/handshake-org/urkel" target="_blank" rel="noopener noreferrer"><code>urkel</code></a>
+<strong>v1.0.0</strong> release work, including cleanup and root-cache
+recovery.</li>
 <li>Open source work: <a href="https://github.com/search?q=author%3Anodech+org%3Ahandshake-org&amp;type=pullrequests" target="_blank" rel="noopener noreferrer">Handshake pull requests</a>
 and shared <a href="https://github.com/search?q=author%3Anodech+org%3Abcoin-org&amp;type=pullrequests" target="_blank" rel="noopener noreferrer">bcoin ecosystem</a>
 dependencies used by <code>hsd</code>.</li>
@@ -272,27 +273,27 @@ dependency maintenance, and node/wallet tooling.</li>
 <li>Created <a href="https://github.com/bcoin-org/bmultisig" target="_blank" rel="noopener noreferrer"><strong><code>bmultisig</code></strong></a>, a
 multisig payment proposal and hardware signing system for Bitcoin
 wallets.</li>
-<li>Built <a href="https://github.com/bcoin-org/bledger" target="_blank" rel="noopener noreferrer"><strong><code>bledger</code></strong></a>, a
-Ledger hardware wallet API implementation using <strong>APDU</strong>,
-including support through a unified <code>busb</code> abstraction over
+<li>Implemented <a href="https://github.com/bcoin-org/bledger" target="_blank" rel="noopener noreferrer"><strong><code>bledger</code></strong></a>, a
+Ledger hardware wallet API using <strong>APDU</strong> and a unified
+<code>busb</code> abstraction across <strong>5 transports</strong>:
 <code>node-hid</code>, <code>node-usb</code>, browser U2F, WebUSB, and
-WebAuthn transports.</li>
+WebAuthn.</li>
 <li>Created <a href="https://github.com/bcoin-org/bsigner" target="_blank" rel="noopener noreferrer"><strong><code>bsigner</code></strong></a>, a
 unified signing interface wrapping the in-house Ledger implementation
 and vendored Trezor support.</li>
-<li>Forked and maintained <a href="https://github.com/bcoin-org/bcash" target="_blank" rel="noopener noreferrer"><strong><code>bcash</code></strong></a>, the
-bcoin-based Bitcoin Cash implementation.</li>
+<li>Owned <a href="https://github.com/bcoin-org/bcash" target="_blank" rel="noopener noreferrer"><strong><code>bcash</code></strong></a>
+maintenance for the bcoin-based Bitcoin Cash implementation.</li>
 <li>Open source work: <a href="https://github.com/search?q=author%3Anodech+org%3Abcoin-org&amp;type=pullrequests" target="_blank" rel="noopener noreferrer">bcoin ecosystem</a>.</li>
 </ul>
 <h3 id="consideritdone-evablockchain-blockchain-development-and-research">ConsiderItDone
 / Evablockchain | Blockchain Development and Research</h3>
 <p>Aug 2016 - Aug 2017 | Remote</p>
 <ul>
-<li>Built blockchain application prototypes and tooling around
+<li>Delivered blockchain application prototypes and tooling around
 Tendermint ABCI and Ethermint.</li>
-<li>Evaluated protocol and application designs for identity, privacy,
-medical records, smart contracts, exchanges, and capital markets use
-cases.</li>
+<li>Evaluated protocol and application designs across <strong>6
+domains</strong>: identity, privacy, medical records, smart contracts,
+exchanges, and capital markets.</li>
 </ul>
 <h3 id="securifi-software-engineer">Securifi | Software Engineer</h3>
 <p>Feb 2015 - Aug 2016 | Remote</p>
@@ -305,9 +306,9 @@ shared libraries primarily in <strong>Go</strong> and
 Contract | Web and Node.js Development</h3>
 <p>2008 - 2014</p>
 <ul>
-<li>Built and maintained web applications, Node.js backends, realtime
-scrapers, data generation systems, PHP applications, CMS tooling, and
-game-related SQL automation.</li>
+<li>Developed and maintained web applications, Node.js backends,
+real-time scrapers, data generation systems, PHP applications, CMS
+tooling, and game-related SQL automation.</li>
 <li>Delivered projects for clients and products including Uprise,
 AllTheRooms, ManufacturedHomes, Sportify, PinPoint.Ge, Megaportal, and
 Georgian Ministry of Finance integrations.</li>
@@ -315,16 +316,21 @@ Georgian Ministry of Finance integrations.</li>
 <h3 id="megasoft-web-developer">Megasoft | Web Developer</h3>
 <p>Dec 2010 - Nov 2011</p>
 <ul>
-<li>Developed PHP-based web applications and backend features.</li>
+<li>Developed PHP web applications and backend features for internal and
+client-facing systems.</li>
 </ul>
-<h2 id="technical-skills">Technical Skills</h2>
+<h2 id="skills">Skills</h2>
 <p>Languages: JavaScript, Node.js, C, Go, Rust, SQL</p>
 <p>Systems: Bitcoin, Handshake, blockchain infrastructure, consensus
-systems, peer-to-peer networking, wallets</p>
-<p>Storage and Infrastructure: LevelDB, Postgres, native bindings,
-C/N-API, Git, CI</p>
+systems, peer-to-peer networking, wallets, mempool, full nodes, Linux,
+TCP/IP</p>
+<p>Storage and Infrastructure: LevelDB, PostgreSQL, database migrations,
+indexing, native bindings, C/N-API, Git, CI/CD</p>
+<p>Engineering Practices: release management, production maintenance,
+unit testing, integration testing, differential testing, benchmarking,
+type/lint tooling, project management, problem solving</p>
 <h2 id="education">Education</h2>
-<p>B.S. Computer Science | Tbilisi State University | 2010 - 2015
-Tbilisi, Georgia</p>
+<p>Bachelor of Science (B.S.), Computer Science | Tbilisi State
+University | 2010 - 2015 Tbilisi, Georgia</p>
 </body>
 </html>
